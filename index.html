@@ -16,12 +16,12 @@
     --red: #E8294C;
     --pink: #F06292;
     --light-pink: #F8BBD9;
-    --dark: #F4F6F8; /* Changed to light background */
-    --card: #FFFFFF; /* White cards */
-    --card2: #F9FAFB; /* Off-white for inputs */
-    --border: rgba(232, 41, 76, 0.15); /* Softer borders */
-    --text: #1A0A0E; /* Dark text for light mode */
-    --muted: #6B7280; /* Gray text */
+    --dark: #F4F6F8;
+    --card: #FFFFFF;
+    --card2: #F9FAFB;
+    --border: rgba(232, 41, 76, 0.15);
+    --text: #1A0A0E;
+    --muted: #6B7280;
     --mono: 'Space Mono', monospace;
     --sans: 'Outfit', sans-serif;
   }
@@ -34,7 +34,6 @@
     overflow-x: hidden;
   }
 
-  /* BG Effects - Lightened for new theme */
   .bg-mesh {
     position: fixed;
     inset: 0;
@@ -65,7 +64,6 @@
     padding: 32px 24px;
   }
 
-  /* Logo */
   .logo-header {
     display: flex;
     flex-direction: column;
@@ -73,11 +71,14 @@
     gap: 10px;
     margin-bottom: 24px;
     animation: fadeDown 0.6s ease both;
+    width: 100%;
+    max-width: 400px;
   }
 
   .logo-header img {
-    height: 120px;
-    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 90px;
     object-fit: contain;
   }
 
@@ -90,9 +91,9 @@
     color: var(--red);
     opacity: 0.9;
     margin-top: 8px;
+    text-align: center;
   }
 
-  /* Cards - Updated for Light Mode */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -113,7 +114,6 @@
     }
   }
 
-  /* Landing Title */
   .landing-title {
     font-size: clamp(32px, 7vw, 64px);
     font-weight: 900;
@@ -132,7 +132,6 @@
     line-height: 1.5;
   }
 
-  /* Form */
   .name-form {
     background: rgba(232,41,76,0.02);
     border-radius: 20px;
@@ -172,7 +171,6 @@
     gap: 6px;
   }
 
-  /* Badges */
   .badge {
     display: inline-block;
     background: rgba(232,41,76,0.1);
@@ -200,7 +198,6 @@
     margin: 8px 0;
   }
 
-  /* Buttons */
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -257,7 +254,6 @@
     cursor: default;
   }
 
-  /* Quiz header */
   .quiz-topbar {
     display: flex;
     justify-content: space-between;
@@ -434,7 +430,6 @@
     gap: 12px;
   }
 
-  /* Results */
   .results-header {
     text-align: center;
     padding: 32px 32px 24px;
@@ -635,7 +630,7 @@
 
 <div id="app">
   <div class="logo-header">
-    <img src="C:\Users\user\Desktop\GDG\Second Session\Content\website_\image.png" alt="GDG Logo">
+    <img src="image.png" alt="GDG Logo">
     <div class="gdg-label">Google Developers Group</div>
   </div>
 
@@ -643,18 +638,18 @@
     <div class="card-inner">
       <p style="font-size:12px;font-weight:700;letter-spacing:0.2em;color:var(--red);margin-bottom:12px;">ML MASTERY CHALLENGE</p>
       <h1 class="landing-title">TEST YOUR<br>ML KNOWLEDGE</h1>
-      <p class="landing-sub">Supervised learning · Clustering · Evaluation metrics · Speed bonus</p>
+      <p class="landing-sub">Supervised learning - Clustering - Evaluation metrics - Speed bonus</p>
 
       <div class="name-form">
         <input type="text" id="playerNameInput" class="name-input" placeholder="Enter your name (required)" maxlength="30" autocomplete="off">
         <div id="nameError" class="error-msg hidden">Please enter your name to start</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:10px;">One attempt per user — your score will be saved on the leaderboard.</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;">One attempt per user - your score will be saved on the leaderboard.</div>
       </div>
 
       <button id="startQuizBtn" class="btn-primary">Start Exam</button>
 
       <div class="landing-meta">
-        <p><span class="badge">20 Core Q's</span> + Bonus round if fast</p>
+        <p><span class="badge">20 Core Qs</span> + Bonus round if fast</p>
         <p><span class="badge">20 Minutes</span> Speed = multiplier up to 1.5x</p>
         <p><span class="badge">Under 10 min</span> unlocks 5 hard bonus questions</p>
       </div>
@@ -684,7 +679,7 @@
       <div class="timer-chip" id="timerChip">Time: <span id="timerDisplay">20:00</span></div>
     </div>
     <div class="progress-wrap"><div class="progress-track"><div id="quizProgress" class="progress-fill" style="width:0%"></div></div></div>
-    <div id="bonusBanner" class="bonus-banner hidden">BONUS ROUND UNLOCKED — 5 Hard Questions Added!</div>
+    <div id="bonusBanner" class="bonus-banner hidden">BONUS ROUND UNLOCKED - 5 Hard Questions Added!</div>
     <div class="question-area">
       <div id="diffBadge" class="diff-badge diff-easy">Easy</div>
       <div id="questionText">Loading...</div>
@@ -701,7 +696,7 @@
       <div class="results-title">Exam Complete</div>
       <div class="results-score" id="finalScoreSpan">0</div>
       <div class="results-meta">
-        <div class="results-meta-item"><div class="label">Time Used</div><div class="val" id="finalTimeSpan">—</div></div>
+        <div class="results-meta-item"><div class="label">Time Used</div><div class="val" id="finalTimeSpan">--</div></div>
         <div class="results-meta-item"><div class="label">Accuracy</div><div class="val"><span id="accuracySpan">0</span>%</div></div>
       </div>
       <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed!</div>
@@ -714,15 +709,14 @@
 </div>
 
 <script>
-  // ----------------------------- QUIZ DATA -----------------------------
   const coreQuestions = [
     { text: "What is the main difference between Traditional Programming and Machine Learning?", options: ["ML uses hardcoded rules", "ML learns patterns from data", "No difference", "ML requires more hardware"], correct: 1, difficulty: "easy", points: 10 },
     { text: "Which of the following is a supervised learning task?", options: ["Clustering", "Dimensionality Reduction", "Classification", "Association Rules"], correct: 2, difficulty: "easy", points: 10 },
     { text: "Handling missing values by replacing with column mean is known as?", options: ["Drop", "Imputation", "Encoding", "Normalization"], correct: 1, difficulty: "easy", points: 10 },
     { text: "StandardScaler in sklearn does what?", options: ["Scales to [0,1]", "Centers to mean=0, variance=1", "Removes outliers", "Encodes categories"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "Which metric is best for imbalanced classification?", options: ["Accuracy", "Precision & Recall", "Mean Absolute Error", "R-squared"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "Which metric is best for imbalanced classification?", options: ["Accuracy", "Precision and Recall", "Mean Absolute Error", "R-squared"], correct: 1, difficulty: "medium", points: 15 },
     { text: "Logistic Regression outputs:", options: ["Probability between 0 and 1", "Linear value", "Class label only", "Distance"], correct: 0, difficulty: "easy", points: 10 },
-    { text: "What does 'K' represent in K-Means clustering?", options: ["Number of features", "Number of clusters", "Number of iterations", "Distance metric"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "What does K represent in K-Means clustering?", options: ["Number of features", "Number of clusters", "Number of iterations", "Distance metric"], correct: 1, difficulty: "easy", points: 10 },
     { text: "Silhouette Score measures:", options: ["Cluster density", "How similar a point is to its own cluster vs others", "Distance to centroid", "Accuracy of classification"], correct: 1, difficulty: "medium", points: 15 },
     { text: "Which of the following is an unsupervised learning algorithm?", options: ["Decision Tree", "Linear Regression", "K-Means", "Logistic Regression"], correct: 2, difficulty: "easy", points: 10 },
     { text: "What is the purpose of feature scaling?", options: ["Prevents features with larger ranges from dominating", "Removes missing data", "Increases accuracy always", "Converts text to numbers"], correct: 0, difficulty: "easy", points: 10 },
@@ -730,22 +724,21 @@
     { text: "Precision is defined as:", options: ["TP/(TP+FN)", "TP/(TP+FP)", "TN/(TN+FP)", "Accuracy/Recall"], correct: 1, difficulty: "medium", points: 15 },
     { text: "What is a centroid in K-Means?", options: ["The mean of all points in a cluster", "The farthest point", "The median point", "Randomly initialized boundary"], correct: 0, difficulty: "easy", points: 10 },
     { text: "Which method helps find optimal K in K-Means?", options: ["Elbow Method", "Confusion Matrix", "ROC Curve", "Cross-Validation"], correct: 0, difficulty: "medium", points: 15 },
-    { text: "Which evaluation metric is used for regression problems?", options: ["Accuracy", "R-squared (R²)", "Precision", "Silhouette Score"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "Which evaluation metric is used for regression problems?", options: ["Accuracy", "R-squared (R-squared)", "Precision", "Silhouette Score"], correct: 1, difficulty: "easy", points: 10 },
     { text: "What does a high Recall indicate?", options: ["Few false positives", "Few false negatives", "High overall accuracy", "Low precision"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "In Linear Regression, feature selection helps:", options: ["Reduce overfitting & improve interpretability", "Increase training time", "Convert categorical data", "Normalize data"], correct: 0, difficulty: "easy", points: 10 },
+    { text: "In Linear Regression, feature selection helps:", options: ["Reduce overfitting and improve interpretability", "Increase training time", "Convert categorical data", "Normalize data"], correct: 0, difficulty: "easy", points: 10 },
     { text: "Which library is primarily used for data manipulation in Python?", options: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"], correct: 1, difficulty: "easy", points: 10 },
     { text: "What is the threshold typically used in logistic regression for binary classification?", options: ["0.3", "0.5", "0.7", "1.0"], correct: 1, difficulty: "easy", points: 10 },
     { text: "Which of the following is an example of reinforcement learning?", options: ["Spam detection", "AlphaGo playing Go", "Customer segmentation", "House price prediction"], correct: 1, difficulty: "medium", points: 15 }
   ];
   const bonusQuestions = [
     { text: "Which clustering validation metric ranges from -1 to +1?", options: ["Davies-Bouldin", "Inertia", "Silhouette Score", "Purity"], correct: 2, difficulty: "hard", points: 25 },
-    { text: "The 'decision boundary' in SVM is?", options: ["Hyperplane separating classes", "Clustering threshold", "Regression line", "Neural network layer"], correct: 0, difficulty: "hard", points: 25 },
+    { text: "The decision boundary in SVM is?", options: ["Hyperplane separating classes", "Clustering threshold", "Regression line", "Neural network layer"], correct: 0, difficulty: "hard", points: 25 },
     { text: "Which is NOT a proper method to handle outliers?", options: ["IQR capping", "Z-score removal", "Mean imputation", "Clustering based removal"], correct: 2, difficulty: "medium", points: 20 },
     { text: "In K-Means, what happens if K is too high?", options: ["Underfitting", "Over-segmentation, high variance", "Better silhouette always", "Centroids collapse"], correct: 1, difficulty: "hard", points: 25 },
-    { text: "Which metric focuses on the positive class and balances precision/recall?", options: ["F1-Score", "Accuracy", "R²", "MAE"], correct: 0, difficulty: "medium", points: 20 }
+    { text: "Which metric focuses on the positive class and balances precision/recall?", options: ["F1-Score", "Accuracy", "R-squared", "MAE"], correct: 0, difficulty: "medium", points: 20 }
   ];
 
-  // Global state
   let currentQuestions = [...coreQuestions];
   let userAnswers = [];
   let currentIndex = 0;
@@ -759,7 +752,6 @@
   let currentPlayer = "";
   let hasAttempted = false;
 
-  // DOM elements
   const landingPage = document.getElementById('landingPage');
   const quizContainer = document.getElementById('quizContainer');
   const resultsDashboard = document.getElementById('resultsDashboard');
@@ -772,7 +764,6 @@
   const leaderboardPreview = document.getElementById('leaderboardPreview');
   const previewBody = document.getElementById('previewLeaderboardBody');
 
-  // Helper: Get scores from localStorage with 3h expiry
   function getScores() {
     const raw = localStorage.getItem('gdg_ml_quiz_lb_v2');
     if (!raw) return [];
@@ -799,7 +790,7 @@
       scores.slice(0, isPreview ? 10 : 100).forEach((s, i) => {
         const row = `<tr${s.name === currentPlayer && !isPreview ? ' class="me"' : ''}>
           <td class="lb-rank ${i < 3 ? 'top' : ''}">${i+1}</td>
-          <td>${s.name}</td><td class="lb-score">${s.score}</td><td class="lb-time">${s.time || '—'}</td>
+          <td>${s.name}</td><td class="lb-score">${s.score}</td><td class="lb-time">${s.time || '--'}</td>
         </tr>`;
         tbody.insertAdjacentHTML('beforeend', row);
       });
@@ -813,7 +804,6 @@
     return scores.some(s => s.name === currentPlayer);
   }
 
-  // Timer & Quiz logic
   function startTimer(seconds) {
     remainingSeconds = seconds;
     if (timerInterval) clearInterval(timerInterval);
@@ -927,7 +917,6 @@
     }
     nameError.classList.add('hidden');
     
-    // Check if name already exists in leaderboard
     currentPlayer = name;
     if (checkUserAttempt()) {
       nameError.textContent = "You have already taken the quiz! One attempt per user.";
