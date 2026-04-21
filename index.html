@@ -702,13 +702,59 @@
       <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed!</div>
     </div>
     <div class="lb-section">
-      <div class="lb-title"><span>Full Leaderboard</span><span class="lb-reset" style="font-size: 10px;">Resets every 3h</span></div>
+      <div class="lb-title"><span>Full Leaderboard</span><span class="lb-reset" style="font-size: 10px;">Live Sync</span></div>
       <div class="lb-scroll"><table class="lb-table"><thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead><tbody id="leaderboardBody"></tbody></table></div>
     </div>
   </div>
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // REPLACE THIS ENTIRE CONFIG OBJECT WITH YOUR KEYS FROM FIREBASE
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let globalScores = []; // Holds the synced cloud database scores
+
+  // Listen for real-time updates from Firestore
+  const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(100));
+  onSnapshot(q, (snapshot) => {
+    globalScores = [];
+    snapshot.forEach((doc) => {
+      globalScores.push(doc.data());
+    });
+    renderLeaderboardTables();
+  });
+
+  async function saveScore(entry) {
+    try {
+      await addDoc(collection(db, "leaderboard"), entry);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+
+  async function checkUserAttempt(name) {
+    const qSnapshot = await getDocs(collection(db, "leaderboard"));
+    let found = false;
+    qSnapshot.forEach((doc) => {
+      if (doc.data().name.toLowerCase() === name.toLowerCase()) found = true;
+    });
+    return found;
+  }
+
+  // ----------------------------- QUIZ DATA -----------------------------
   const coreQuestions = [
     { text: "What is the main difference between Traditional Programming and Machine Learning?", options: ["ML uses hardcoded rules", "ML learns patterns from data", "No difference", "ML requires more hardware"], correct: 1, difficulty: "easy", points: 10 },
     { text: "Which of the following is a supervised learning task?", options: ["Clustering", "Dimensionality Reduction", "Classification", "Association Rules"], correct: 2, difficulty: "easy", points: 10 },
@@ -764,30 +810,14 @@
   const leaderboardPreview = document.getElementById('leaderboardPreview');
   const previewBody = document.getElementById('previewLeaderboardBody');
 
-  function getScores() {
-    const raw = localStorage.getItem('gdg_ml_quiz_lb_v2');
-    if (!raw) return [];
-    const cutoff = Date.now() - 3 * 60 * 60 * 1000;
-    return JSON.parse(raw).filter(s => s.timestamp > cutoff);
-  }
-
-  function saveScore(entry) {
-    let scores = getScores();
-    scores.push(entry);
-    scores.sort((a,b) => b.score - a.score);
-    scores = scores.slice(0, 100);
-    localStorage.setItem('gdg_ml_quiz_lb_v2', JSON.stringify(scores));
-  }
-
   function renderLeaderboardTables() {
-    const scores = getScores();
     const renderTo = (tbody, isPreview = false) => {
       tbody.innerHTML = '';
-      if (!scores.length) {
+      if (!globalScores.length) {
         tbody.innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;">No scores yet</td></tr>';
         return;
       }
-      scores.slice(0, isPreview ? 10 : 100).forEach((s, i) => {
+      globalScores.slice(0, isPreview ? 10 : 100).forEach((s, i) => {
         const row = `<tr${s.name === currentPlayer && !isPreview ? ' class="me"' : ''}>
           <td class="lb-rank ${i < 3 ? 'top' : ''}">${i+1}</td>
           <td>${s.name}</td><td class="lb-score">${s.score}</td><td class="lb-time">${s.time || '--'}</td>
@@ -797,11 +827,6 @@
     };
     renderTo(document.getElementById('leaderboardBody'), false);
     renderTo(previewBody, true);
-  }
-
-  function checkUserAttempt() {
-    const scores = getScores();
-    return scores.some(s => s.name === currentPlayer);
   }
 
   function startTimer(seconds) {
@@ -888,7 +913,7 @@
     questionStartTime = Date.now();
   }
 
-  function endQuiz() {
+  async function endQuiz() {
     if (quizFinished) return;
     quizFinished = true;
     quizActive = false;
@@ -901,14 +926,16 @@
     document.getElementById('finalTimeSpan').textContent = timeStr;
     document.getElementById('accuracySpan').textContent = ((correct/totalLen)*100).toFixed(1);
     if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
+    
+    // Save to Firebase Cloud Database
     const entry = { name: currentPlayer, score: totalPoints, time: timeStr, timestamp: Date.now() };
-    saveScore(entry);
-    renderLeaderboardTables();
+    await saveScore(entry);
+    
     quizContainer.classList.add('hidden');
     resultsDashboard.classList.remove('hidden');
   }
 
-  function startQuiz() {
+  async function startQuiz() {
     const name = playerNameInput.value.trim();
     if (!name) { 
       nameError.textContent = "Please enter your name to start";
@@ -917,13 +944,20 @@
     }
     nameError.classList.add('hidden');
     
-    currentPlayer = name;
-    if (checkUserAttempt()) {
+    // Check cloud database for previous attempts
+    startBtn.disabled = true;
+    startBtn.textContent = "Checking Server...";
+    
+    const hasPlayed = await checkUserAttempt(name);
+    if (hasPlayed) {
       nameError.textContent = "You have already taken the quiz! One attempt per user.";
       nameError.classList.remove('hidden');
+      startBtn.disabled = false;
+      startBtn.textContent = "Start Exam";
       return;
     }
     
+    currentPlayer = name;
     hasAttempted = true;
     currentQuestions = [...coreQuestions];
     userAnswers = new Array(20).fill(null);
@@ -935,6 +969,10 @@
     document.getElementById('bonusBadge').classList.add('hidden');
     document.getElementById('timerDisplay').textContent = '20:00';
     document.getElementById('timerChip').classList.remove('warning');
+    
+    startBtn.disabled = false;
+    startBtn.textContent = "Start Exam";
+    
     landingPage.classList.add('hidden');
     resultsDashboard.classList.add('hidden');
     quizContainer.classList.remove('hidden');
@@ -947,8 +985,6 @@
   nextBtn.onclick = () => { if (quizActive && currentIndex+1 < currentQuestions.length && userAnswers[currentIndex]) { currentIndex++; renderQuestion(); } };
   prevBtn.onclick = () => { if (quizActive && currentIndex > 0) { currentIndex--; renderQuestion(); } };
   toggleLeaderboardBtn.onclick = () => { leaderboardPreview.classList.toggle('hidden'); renderLeaderboardTables(); };
-
-  renderLeaderboardTables();
 </script>
 </body>
 </html>
