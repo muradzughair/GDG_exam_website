@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ML Mastery Quiz | GDG Al-Hussein Technical University</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --red: #E8294C;
+    --pink: #F06292;
+    --light-pink: #F8BBD9;
+    --dark: #F4F6F8; /* Changed to light background */
+    --card: #FFFFFF; /* White cards */
+    --card2: #F9FAFB; /* Off-white for inputs */
+    --border: rgba(232, 41, 76, 0.15); /* Softer borders */
+    --text: #1A0A0E; /* Dark text for light mode */
+    --muted: #6B7280; /* Gray text */
+    --mono: 'Space Mono', monospace;
+    --sans: 'Outfit', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG Effects - Lightened for new theme */
+  .bg-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(232,41,76,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 60% at 85% 80%, rgba(240,98,146,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(232,41,76,0.03) 0%, transparent 80%);
+  }
+
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(232,41,76,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+
+  /* Logo */
+  .logo-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo-header img {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .gdg-label {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    opacity: 0.9;
+    margin-top: 8px;
+  }
+
+  /* Cards - Updated for Light Mode */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: 0 20px 40px -10px rgba(232, 41, 76, 0.08), 0 4px 12px rgba(0,0,0,0.02);
+    width: 100%;
+    max-width: 780px;
+    transition: all 0.2s;
+  }
+
+  .card-inner {
+    padding: 36px 40px;
+  }
+
+  @media (max-width: 640px) {
+    .card-inner {
+      padding: 28px 20px;
+    }
+  }
+
+  /* Landing Title */
+  .landing-title {
+    font-size: clamp(32px, 7vw, 64px);
+    font-weight: 900;
+    line-height: 1.05;
+    background: linear-gradient(135deg, var(--text) 30%, var(--red) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .landing-sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  /* Form */
+  .name-form {
+    background: rgba(232,41,76,0.02);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+  }
+
+  .name-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid rgba(232,41,76,0.3);
+    border-radius: 60px;
+    padding: 14px 20px;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .name-input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 4px rgba(232,41,76,0.1);
+  }
+
+  .name-input::placeholder {
+    color: #9CA3AF;
+  }
+
+  .error-msg {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    background: rgba(232,41,76,0.1);
+    border: 1px solid rgba(232,41,76,0.2);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 2px 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .landing-meta {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 8px;
+  }
+
+  .landing-meta p {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0184e 100%);
+    color: #fff;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(232,41,76,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+    width: 100%;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(232,41,76,0.35);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ghost {
+    background: rgba(232,41,76,0.05);
+    border: 1px solid var(--border);
+    color: var(--red);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(232,41,76,0.1);
+    border-color: rgba(232,41,76,0.3);
+  }
+
+  .btn-ghost:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  /* Quiz header */
+  .quiz-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px 32px 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+
+  .q-chip, .score-chip, .timer-chip {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: rgba(232,41,76,0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+
+  .score-chip, .timer-chip {
+    background: var(--card2);
+  }
+
+  .timer-chip.warning {
+    color: var(--red);
+    border-color: rgba(232,41,76,0.4);
+    background: rgba(232,41,76,0.05);
+    animation: pulseWarning 1s infinite;
+  }
+
+  @keyframes pulseWarning {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,41,76,0); }
+    50% { box-shadow: 0 0 0 4px rgba(232,41,76,0.15); }
+  }
+
+  .progress-wrap {
+    padding: 16px 32px 0;
+  }
+
+  .progress-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 100px;
+    height: 6px;
+  }
+
+  .progress-fill {
+    background: linear-gradient(90deg, var(--red), var(--pink));
+    height: 6px;
+    border-radius: 100px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  .question-area {
+    padding: 24px 32px 0;
+  }
+
+  .diff-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .diff-easy   { background: rgba(72,199,142,0.1); color: #2E8B57; border: 1px solid rgba(72,199,142,0.3); }
+  .diff-medium { background: rgba(245,158,11,0.1); color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
+  .diff-hard   { background: rgba(232,41,76,0.1); color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
+
+  #questionText {
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 32px 24px;
+  }
+
+  @media (max-width: 640px) {
+    .options-grid {
+      grid-template-columns: 1fr;
+      padding: 0 20px 20px;
+    }
+    .quiz-topbar, .progress-wrap, .question-area {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  .opt-btn {
+    text-align: left;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .opt-btn:hover:not(.answered) {
+    border-color: rgba(232,41,76,0.4);
+    background: rgba(232,41,76,0.03);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232,41,76,0.05);
+  }
+
+  .opt-label {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .opt-btn.correct {
+    border-color: #48C78E;
+    background: rgba(72,199,142,0.05);
+    color: #1A5336;
+  }
+
+  .opt-btn.correct .opt-label {
+    background: #48C78E;
+    border-color: #48C78E;
+    color: #fff;
+  }
+
+  .opt-btn.wrong {
+    border-color: var(--red);
+    background: rgba(232,41,76,0.05);
+    color: var(--red);
+  }
+
+  .opt-btn.wrong .opt-label {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  .opt-btn.answered {
+    cursor: default;
+  }
+
+  .quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px 28px;
+    gap: 12px;
+  }
+
+  /* Results */
+  .results-header {
+    text-align: center;
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .results-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .results-score {
+    font-family: var(--mono);
+    font-size: clamp(48px, 10vw, 80px);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .results-meta {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .results-meta-item .label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .results-meta-item .val {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .bonus-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(232,41,76,0.05);
+    border: 1px solid rgba(232,41,76,0.2);
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 100px;
+    margin-top: 16px;
+  }
+
+  .lb-section {
+    padding: 24px 32px 32px;
+  }
+
+  .lb-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .lb-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--card2);
+  }
+
+  .lb-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .lb-table th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.02);
+  }
+
+  .lb-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+
+  .lb-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .lb-table tr.me {
+    background: rgba(232,41,76,0.06);
+    font-weight: 600;
+  }
+
+  .lb-rank.top {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .lb-score {
+    font-family: var(--mono);
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .multiplier-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    color: #fff;
+    font-family: var(--mono);
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 12px;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(232,41,76,0.3);
+    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes toastOut {
+    from { opacity: 1; transform: none; }
+    to { opacity: 0; transform: translateX(40px); }
+  }
+
+  .bonus-banner {
+    background: rgba(232,41,76,0.05);
+    border-top: 1px solid rgba(232,41,76,0.15);
+    border-bottom: 1px solid rgba(232,41,76,0.15);
+    color: var(--red);
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 12px;
+    margin: 12px 32px 0;
+    border-radius: 8px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dashboard-link {
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .leaderboard-preview {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .leaderboard-preview:hover {
+    background: rgba(232,41,76,0.02);
+  }
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-dots"></div>
+
+<div id="app">
+  <div class="logo-header">
+    <img src="C:\Users\user\Desktop\GDG\Second Session\Content\website_\image.png" alt="GDG Logo">
+    <div class="gdg-label">Google Developers Group</div>
+  </div>
+
+  <div id="landingPage" class="card">
+    <div class="card-inner">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.2em;color:var(--red);margin-bottom:12px;">ML MASTERY CHALLENGE</p>
+      <h1 class="landing-title">TEST YOUR<br>ML KNOWLEDGE</h1>
+      <p class="landing-sub">Supervised learning · Clustering · Evaluation metrics · Speed bonus</p>
+
+      <div class="name-form">
+        <input type="text" id="playerNameInput" class="name-input" placeholder="Enter your name (required)" maxlength="30" autocomplete="off">
+        <div id="nameError" class="error-msg hidden">Please enter your name to start</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;">One attempt per user — your score will be saved on the leaderboard.</div>
+      </div>
+
+      <button id="startQuizBtn" class="btn-primary">Start Exam</button>
+
+      <div class="landing-meta">
+        <p><span class="badge">20 Core Q's</span> + Bonus round if fast</p>
+        <p><span class="badge">20 Minutes</span> Speed = multiplier up to 1.5x</p>
+        <p><span class="badge">Under 10 min</span> unlocks 5 hard bonus questions</p>
+      </div>
+
+      <div class="dashboard-link">
+        <button id="toggleLeaderboardBtn" class="btn-ghost" style="width:100%;margin-top:8px;">Show Leaderboard</button>
+      </div>
+
+      <div id="leaderboardPreview" class="hidden" style="margin-top:20px;">
+        <div class="lb-title" style="margin-bottom:8px;">Top Scores</div>
+        <div class="lb-scroll" style="max-height:240px;">
+          <table class="lb-table">
+            <thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead>
+            <tbody id="previewLeaderboardBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="quizContainer" class="card hidden">
+    <div class="quiz-topbar">
+      <div style="display:flex;gap:10px;">
+        <div class="q-chip">Q: <span id="currentQNum">1</span><span style="color:var(--muted);">/20</span></div>
+        <div class="score-chip">Score: <span id="liveScore">0</span></div>
+      </div>
+      <div class="timer-chip" id="timerChip">Time: <span id="timerDisplay">20:00</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-track"><div id="quizProgress" class="progress-fill" style="width:0%"></div></div></div>
+    <div id="bonusBanner" class="bonus-banner hidden">BONUS ROUND UNLOCKED — 5 Hard Questions Added!</div>
+    <div class="question-area">
+      <div id="diffBadge" class="diff-badge diff-easy">Easy</div>
+      <div id="questionText">Loading...</div>
+    </div>
+    <div class="options-grid" id="optionsContainer"></div>
+    <div class="quiz-footer">
+      <button id="prevBtn" class="btn-ghost" disabled>Prev</button>
+      <button id="nextBtn" class="btn-primary" style="padding:12px 28px;">Next</button>
+    </div>
+  </div>
+
+  <div id="resultsDashboard" class="card hidden">
+    <div class="results-header">
+      <div class="results-title">Exam Complete</div>
+      <div class="results-score" id="finalScoreSpan">0</div>
+      <div class="results-meta">
+        <div class="results-meta-item"><div class="label">Time Used</div><div class="val" id="finalTimeSpan">—</div></div>
+        <div class="results-meta-item"><div class="label">Accuracy</div><div class="val"><span id="accuracySpan">0</span>%</div></div>
+      </div>
+      <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed!</div>
+    </div>
+    <div class="lb-section">
+      <div class="lb-title"><span>Full Leaderboard</span><span class="lb-reset" style="font-size: 10px;">Resets every 3h</span></div>
+      <div class="lb-scroll"><table class="lb-table"><thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead><tbody id="leaderboardBody"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ----------------------------- QUIZ DATA -----------------------------
+  const coreQuestions = [
+    { text: "What is the main difference between Traditional Programming and Machine Learning?", options: ["ML uses hardcoded rules", "ML learns patterns from data", "No difference", "ML requires more hardware"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "Which of the following is a supervised learning task?", options: ["Clustering", "Dimensionality Reduction", "Classification", "Association Rules"], correct: 2, difficulty: "easy", points: 10 },
+    { text: "Handling missing values by replacing with column mean is known as?", options: ["Drop", "Imputation", "Encoding", "Normalization"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "StandardScaler in sklearn does what?", options: ["Scales to [0,1]", "Centers to mean=0, variance=1", "Removes outliers", "Encodes categories"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "Which metric is best for imbalanced classification?", options: ["Accuracy", "Precision & Recall", "Mean Absolute Error", "R-squared"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "Logistic Regression outputs:", options: ["Probability between 0 and 1", "Linear value", "Class label only", "Distance"], correct: 0, difficulty: "easy", points: 10 },
+    { text: "What does 'K' represent in K-Means clustering?", options: ["Number of features", "Number of clusters", "Number of iterations", "Distance metric"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "Silhouette Score measures:", options: ["Cluster density", "How similar a point is to its own cluster vs others", "Distance to centroid", "Accuracy of classification"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "Which of the following is an unsupervised learning algorithm?", options: ["Decision Tree", "Linear Regression", "K-Means", "Logistic Regression"], correct: 2, difficulty: "easy", points: 10 },
+    { text: "What is the purpose of feature scaling?", options: ["Prevents features with larger ranges from dominating", "Removes missing data", "Increases accuracy always", "Converts text to numbers"], correct: 0, difficulty: "easy", points: 10 },
+    { text: "In Decision Trees, splitting is based on:", options: ["P-value", "Information Gain / Gini Impurity", "Gradient Descent", "Euclidean Distance"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "Precision is defined as:", options: ["TP/(TP+FN)", "TP/(TP+FP)", "TN/(TN+FP)", "Accuracy/Recall"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "What is a centroid in K-Means?", options: ["The mean of all points in a cluster", "The farthest point", "The median point", "Randomly initialized boundary"], correct: 0, difficulty: "easy", points: 10 },
+    { text: "Which method helps find optimal K in K-Means?", options: ["Elbow Method", "Confusion Matrix", "ROC Curve", "Cross-Validation"], correct: 0, difficulty: "medium", points: 15 },
+    { text: "Which evaluation metric is used for regression problems?", options: ["Accuracy", "R-squared (R²)", "Precision", "Silhouette Score"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "What does a high Recall indicate?", options: ["Few false positives", "Few false negatives", "High overall accuracy", "Low precision"], correct: 1, difficulty: "medium", points: 15 },
+    { text: "In Linear Regression, feature selection helps:", options: ["Reduce overfitting & improve interpretability", "Increase training time", "Convert categorical data", "Normalize data"], correct: 0, difficulty: "easy", points: 10 },
+    { text: "Which library is primarily used for data manipulation in Python?", options: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "What is the threshold typically used in logistic regression for binary classification?", options: ["0.3", "0.5", "0.7", "1.0"], correct: 1, difficulty: "easy", points: 10 },
+    { text: "Which of the following is an example of reinforcement learning?", options: ["Spam detection", "AlphaGo playing Go", "Customer segmentation", "House price prediction"], correct: 1, difficulty: "medium", points: 15 }
+  ];
+  const bonusQuestions = [
+    { text: "Which clustering validation metric ranges from -1 to +1?", options: ["Davies-Bouldin", "Inertia", "Silhouette Score", "Purity"], correct: 2, difficulty: "hard", points: 25 },
+    { text: "The 'decision boundary' in SVM is?", options: ["Hyperplane separating classes", "Clustering threshold", "Regression line", "Neural network layer"], correct: 0, difficulty: "hard", points: 25 },
+    { text: "Which is NOT a proper method to handle outliers?", options: ["IQR capping", "Z-score removal", "Mean imputation", "Clustering based removal"], correct: 2, difficulty: "medium", points: 20 },
+    { text: "In K-Means, what happens if K is too high?", options: ["Underfitting", "Over-segmentation, high variance", "Better silhouette always", "Centroids collapse"], correct: 1, difficulty: "hard", points: 25 },
+    { text: "Which metric focuses on the positive class and balances precision/recall?", options: ["F1-Score", "Accuracy", "R²", "MAE"], correct: 0, difficulty: "medium", points: 20 }
+  ];
+
+  // Global state
+  let currentQuestions = [...coreQuestions];
+  let userAnswers = [];
+  let currentIndex = 0;
+  let quizActive = false;
+  let timerInterval = null;
+  let totalPoints = 0;
+  let bonusUnlocked = false;
+  let quizFinished = false;
+  let questionStartTime = 0;
+  let remainingSeconds = 1200;
+  let currentPlayer = "";
+  let hasAttempted = false;
+
+  // DOM elements
+  const landingPage = document.getElementById('landingPage');
+  const quizContainer = document.getElementById('quizContainer');
+  const resultsDashboard = document.getElementById('resultsDashboard');
+  const startBtn = document.getElementById('startQuizBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const playerNameInput = document.getElementById('playerNameInput');
+  const nameError = document.getElementById('nameError');
+  const toggleLeaderboardBtn = document.getElementById('toggleLeaderboardBtn');
+  const leaderboardPreview = document.getElementById('leaderboardPreview');
+  const previewBody = document.getElementById('previewLeaderboardBody');
+
+  // Helper: Get scores from localStorage with 3h expiry
+  function getScores() {
+    const raw = localStorage.getItem('gdg_ml_quiz_lb_v2');
+    if (!raw) return [];
+    const cutoff = Date.now() - 3 * 60 * 60 * 1000;
+    return JSON.parse(raw).filter(s => s.timestamp > cutoff);
+  }
+
+  function saveScore(entry) {
+    let scores = getScores();
+    scores.push(entry);
+    scores.sort((a,b) => b.score - a.score);
+    scores = scores.slice(0, 100);
+    localStorage.setItem('gdg_ml_quiz_lb_v2', JSON.stringify(scores));
+  }
+
+  function renderLeaderboardTables() {
+    const scores = getScores();
+    const renderTo = (tbody, isPreview = false) => {
+      tbody.innerHTML = '';
+      if (!scores.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;">No scores yet</td></tr>';
+        return;
+      }
+      scores.slice(0, isPreview ? 10 : 100).forEach((s, i) => {
+        const row = `<tr${s.name === currentPlayer && !isPreview ? ' class="me"' : ''}>
+          <td class="lb-rank ${i < 3 ? 'top' : ''}">${i+1}</td>
+          <td>${s.name}</td><td class="lb-score">${s.score}</td><td class="lb-time">${s.time || '—'}</td>
+        </tr>`;
+        tbody.insertAdjacentHTML('beforeend', row);
+      });
+    };
+    renderTo(document.getElementById('leaderboardBody'), false);
+    renderTo(previewBody, true);
+  }
+
+  function checkUserAttempt() {
+    const scores = getScores();
+    return scores.some(s => s.name === currentPlayer);
+  }
+
+  // Timer & Quiz logic
+  function startTimer(seconds) {
+    remainingSeconds = seconds;
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (!quizActive) return;
+      remainingSeconds--;
+      const m = Math.floor(remainingSeconds / 60);
+      const s = remainingSeconds % 60;
+      document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (remainingSeconds <= 60) document.getElementById('timerChip').classList.add('warning');
+      if (remainingSeconds <= 0) { clearInterval(timerInterval); endQuiz(); }
+    }, 1000);
+  }
+
+  function triggerBonus() {
+    if (bonusUnlocked) return;
+    bonusUnlocked = true;
+    currentQuestions = [...coreQuestions, ...bonusQuestions];
+    userAnswers = userAnswers.concat(new Array(bonusQuestions.length).fill(null));
+    const banner = document.getElementById('bonusBanner');
+    banner.classList.remove('hidden');
+    setTimeout(() => banner.classList.add('hidden'), 4000);
+    document.getElementById('currentQNum').nextSibling.textContent = `/${currentQuestions.length}`;
+  }
+
+  function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'multiplier-toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2200);
+  }
+
+  function renderQuestion() {
+    const q = currentQuestions[currentIndex];
+    const totalLen = currentQuestions.length;
+    document.getElementById('currentQNum').textContent = `${currentIndex+1}`;
+    document.getElementById('currentQNum').nextSibling.textContent = `/${totalLen}`;
+    document.getElementById('quizProgress').style.width = `${((currentIndex+1)/totalLen)*100}%`;
+    const diffBadge = document.getElementById('diffBadge');
+    diffBadge.textContent = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
+    diffBadge.className = `diff-badge diff-${q.difficulty}`;
+    document.getElementById('questionText').textContent = q.text;
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+    const saved = userAnswers[currentIndex];
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.innerHTML = `<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
+      if (saved) {
+        btn.classList.add('answered');
+        if (idx === q.correct) btn.classList.add('correct');
+        else if (idx === saved.selected) btn.classList.add('wrong');
+      }
+      btn.onclick = () => {
+        if (!quizActive || saved) return;
+        const isCorrect = idx === q.correct;
+        const timeSpent = (Date.now() - questionStartTime)/1000;
+        let mult = 1.0;
+        if (isCorrect) {
+          if (timeSpent <= 3) mult = 1.5;
+          else if (timeSpent <= 6) mult = 1.3;
+          else if (timeSpent <= 10) mult = 1.1;
+          const earned = Math.floor(q.points * mult);
+          totalPoints += earned;
+          document.getElementById('liveScore').textContent = totalPoints;
+          if (mult > 1) showToast(`${mult}x Speed Bonus! +${earned} pts`);
+        }
+        userAnswers[currentIndex] = { selected: idx, isCorrect };
+        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) container.children[q.correct].classList.add('correct');
+        if (!bonusUnlocked && currentIndex === 19 && remainingSeconds >= 600) setTimeout(() => triggerBonus(), 300);
+        setTimeout(() => {
+          if (currentIndex+1 < currentQuestions.length) { currentIndex++; renderQuestion(); }
+          else endQuiz();
+        }, 800);
+      };
+      container.appendChild(btn);
+    });
+    prevBtn.disabled = currentIndex === 0;
+    questionStartTime = Date.now();
+  }
+
+  function endQuiz() {
+    if (quizFinished) return;
+    quizFinished = true;
+    quizActive = false;
+    clearInterval(timerInterval);
+    const totalLen = currentQuestions.length;
+    const correct = userAnswers.filter(a => a && a.isCorrect).length;
+    const timeUsed = 1200 - remainingSeconds;
+    const timeStr = `${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
+    document.getElementById('finalScoreSpan').textContent = totalPoints;
+    document.getElementById('finalTimeSpan').textContent = timeStr;
+    document.getElementById('accuracySpan').textContent = ((correct/totalLen)*100).toFixed(1);
+    if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
+    const entry = { name: currentPlayer, score: totalPoints, time: timeStr, timestamp: Date.now() };
+    saveScore(entry);
+    renderLeaderboardTables();
+    quizContainer.classList.add('hidden');
+    resultsDashboard.classList.remove('hidden');
+  }
+
+  function startQuiz() {
+    const name = playerNameInput.value.trim();
+    if (!name) { 
+      nameError.textContent = "Please enter your name to start";
+      nameError.classList.remove('hidden'); 
+      return; 
+    }
+    nameError.classList.add('hidden');
+    
+    // Check if name already exists in leaderboard
+    currentPlayer = name;
+    if (checkUserAttempt()) {
+      nameError.textContent = "You have already taken the quiz! One attempt per user.";
+      nameError.classList.remove('hidden');
+      return;
+    }
+    
+    hasAttempted = true;
+    currentQuestions = [...coreQuestions];
+    userAnswers = new Array(20).fill(null);
+    currentIndex = 0;
+    totalPoints = 0;
+    bonusUnlocked = false;
+    quizFinished = false;
+    document.getElementById('liveScore').textContent = '0';
+    document.getElementById('bonusBadge').classList.add('hidden');
+    document.getElementById('timerDisplay').textContent = '20:00';
+    document.getElementById('timerChip').classList.remove('warning');
+    landingPage.classList.add('hidden');
+    resultsDashboard.classList.add('hidden');
+    quizContainer.classList.remove('hidden');
+    renderQuestion();
+    quizActive = true;
+    startTimer(1200);
+  }
+
+  startBtn.onclick = startQuiz;
+  nextBtn.onclick = () => { if (quizActive && currentIndex+1 < currentQuestions.length && userAnswers[currentIndex]) { currentIndex++; renderQuestion(); } };
+  prevBtn.onclick = () => { if (quizActive && currentIndex > 0) { currentIndex--; renderQuestion(); } };
+  toggleLeaderboardBtn.onclick = () => { leaderboardPreview.classList.toggle('hidden'); renderLeaderboardTables(); };
+
+  renderLeaderboardTables();
+</script>
+</body>
+</html>
