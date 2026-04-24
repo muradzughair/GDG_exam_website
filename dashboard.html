@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | ML Mastery Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #E8294C;
+  --pink: #F06292;
+  --dark-bg: #0D0A0B;
+  --dark-card: #161214;
+  --dark-card2: #1E1A1C;
+  --dark-border: rgba(232,41,76,0.18);
+  --text: #F0ECF0;
+  --muted: #7A6E75;
+  --green: #48C78E;
+  --amber: #F59E0B;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--dark-bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── Canvas bg ── */
+#bgCanvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+}
+
+/* ── Login screen ── */
+#loginScreen {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--dark-bg);
+}
+.login-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 24px;
+  padding: 48px 40px;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+  text-align: center;
+}
+.login-icon { font-size: 48px; margin-bottom: 16px; }
+.login-title {
+  font-size: 22px; font-weight: 900;
+  background: linear-gradient(135deg, var(--text), var(--red));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 6px;
+}
+.login-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+
+.pw-input {
+  width: 100%; background: var(--dark-card2);
+  border: 1px solid var(--dark-border); border-radius: 60px;
+  padding: 14px 20px; font-family: var(--sans); font-size: 16px;
+  color: var(--text); outline: none; transition: all 0.2s;
+  letter-spacing: 0.1em; text-align: center;
+}
+.pw-input:focus { border-color: var(--red); box-shadow: 0 0 0 4px rgba(232,41,76,0.15); }
+.pw-input::placeholder { letter-spacing: normal; color: var(--muted); }
+
+.login-btn {
+  width: 100%; margin-top: 14px;
+  background: linear-gradient(135deg, var(--red), #c0184e);
+  color: #fff; font-family: var(--sans); font-weight: 700; font-size: 15px;
+  padding: 13px 0; border-radius: 60px; border: none; cursor: pointer;
+  box-shadow: 0 8px 20px rgba(232,41,76,0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(232,41,76,0.4); }
+.login-error {
+  color: var(--red); font-size: 13px; margin-top: 10px;
+  display: none; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* ── Dashboard layout ── */
+#dashboard { display: none; position: relative; z-index: 1; }
+
+.topbar {
+  background: rgba(22,18,20,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--dark-border);
+  padding: 16px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-brand .brand-icon { font-size: 24px; }
+.topbar-brand h1 { font-size: 16px; font-weight: 800; color: var(--text); }
+.topbar-brand p { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); animation: livePulse 1.5s infinite;
+  display: inline-block;
+}
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(72,199,142,0); }
+  50% { box-shadow: 0 0 0 5px rgba(72,199,142,0.2); }
+}
+.live-label { font-family: var(--mono); font-size: 11px; color: var(--green); }
+
+.btn-refresh, .btn-reset, .btn-logout {
+  font-family: var(--sans); font-weight: 600; font-size: 13px;
+  padding: 8px 18px; border-radius: 60px; cursor: pointer; transition: all 0.15s; border: none;
+}
+.btn-refresh {
+  background: rgba(232,41,76,0.1); border: 1px solid var(--dark-border); color: var(--red);
+}
+.btn-refresh:hover { background: rgba(232,41,76,0.18); }
+.btn-reset {
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--amber);
+}
+.btn-reset:hover { background: rgba(245,158,11,0.2); }
+.btn-logout {
+  background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--muted);
+}
+.btn-logout:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+/* ── Main content ── */
+.content { padding: 28px 32px 48px; max-width: 1200px; margin: 0 auto; }
+
+/* ── Stats row ── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--dark-card); border: 1px solid var(--dark-border);
+  border-radius: 18px; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.stat-value { font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--text); line-height: 1; }
+.stat-sub { font-size: 12px; color: var(--muted); }
+.stat-card.highlight .stat-value { color: var(--red); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.amber .stat-value { color: var(--amber); }
+
+/* ── Grid ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+@media(max-width:900px) { .grid-2 { grid-template-columns: 1fr; } .content { padding: 20px 16px 48px; } }
+
+/* ── Panel cards ── */
+.panel {
+  background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 20px; overflow: hidden;
+}
+.panel-head {
+  padding: 18px 24px; border-bottom: 1px solid var(--dark-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.panel-body { padding: 20px 24px; }
+
+/* ── Leaderboard table ── */
+.lb-scroll { max-height: 460px; overflow-y: auto; }
+.lb-table { width: 100%; border-collapse: collapse; }
+.lb-table th {
+  position: sticky; top: 0;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding: 12px 16px; text-align: left;
+  border-bottom: 1px solid var(--dark-border); background: var(--dark-card);
+}
+.lb-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.lb-table tr:last-child td { border-bottom: none; }
+.lb-table tr:hover td { background: rgba(232,41,76,0.04); }
+.lb-rank { font-family: var(--mono); font-size: 13px; }
+.lb-rank.top1 { color: #FFD700; }
+.lb-rank.top2 { color: #C0C0C0; }
+.lb-rank.top3 { color: #CD7F32; }
+.lb-score { font-family: var(--mono); color: var(--red); font-weight: 700; }
+.lb-time { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.lb-name { font-weight: 600; color: var(--text); }
+.lb-bonus { font-size: 10px; color: var(--amber); margin-left: 4px; }
+
+/* ── Bar chart ── */
+.bar-chart { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { font-size: 12px; color: var(--muted); min-width: 80px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; background: rgba(255,255,255,0.04); border-radius: 4px; height: 8px; }
+.bar-fill { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--red), var(--pink)); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+.bar-val { font-family: var(--mono); font-size: 11px; color: var(--text); min-width: 32px; text-align: right; }
+
+/* ── Score distribution canvas ── */
+#distChart { width: 100%; height: 160px; display: block; }
+
+/* ── Difficulty breakdown ── */
+.diff-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.diff-chip {
+  flex: 1; min-width: 80px; background: var(--dark-card2); border: 1px solid var(--dark-border);
+  border-radius: 14px; padding: 14px 16px; text-align: center;
+}
+.diff-chip .dc-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.diff-chip .dc-val { font-family: var(--mono); font-size: 22px; font-weight: 700; }
+.dc-easy  { color: var(--green); }
+.dc-medium{ color: var(--amber); }
+.dc-hard  { color: var(--red); }
+
+/* ── Hint stats ── */
+.hint-row { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+.hint-stat {
+  flex: 1; min-width: 100px; background: var(--dark-card2); border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 14px; padding: 16px; text-align: center;
+}
+.hint-stat .hs-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.hint-stat .hs-val { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--amber); }
+
+/* ── Most-missed questions ── */
+.missed-list { display: flex; flex-direction: column; gap: 8px; }
+.missed-item {
+  background: var(--dark-card2); border: 1px solid var(--dark-border); border-radius: 12px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 14px;
+}
+.missed-num { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 28px; }
+.missed-text { font-size: 13px; color: var(--text); flex: 1; line-height: 1.4; }
+.missed-pct { font-family: var(--mono); font-size: 13px; color: var(--red); font-weight: 700; white-space: nowrap; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  background: var(--dark-card); border: 1px solid var(--dark-border);
+  border-radius: 14px; padding: 14px 22px;
+  font-size: 14px; color: var(--text);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+/* ── Confirm modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 20px;
+  padding: 32px 28px; width: 100%; max-width: 360px; text-align: center;
+}
+.modal-icon { font-size: 36px; margin-bottom: 12px; }
+.modal-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+.modal-actions { display: flex; gap: 12px; }
+.modal-actions button { flex: 1; padding: 12px; border-radius: 60px; border: none; font-family: var(--sans); font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.15s; }
+.modal-cancel { background: var(--dark-card2); color: var(--muted); border: 1px solid var(--dark-border) !important; }
+.modal-confirm { background: linear-gradient(135deg, var(--amber), #D97706); color: #fff; }
+
+/* ── Spinner ── */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.15); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-icon"></div>
+    <div class="login-title">Admin Dashboard</div>
+    <div class="login-sub">ML Mastery Quiz · GDG ATU</div>
+    <input type="password" id="pwInput" class="pw-input" placeholder="Enter password" autocomplete="off">
+    <div id="loginError" class="login-error">⚠ Incorrect password</div>
+    <button id="loginBtn" class="login-btn">Unlock Dashboard</button>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="dashboard">
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon"></div>
+      <div>
+        <h1>Quiz Dashboard</h1>
+        <p>GDG · Al-Hussein Technical University</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span class="live-dot"></span>
+      <span class="live-label">LIVE</span>
+      <button class="btn-refresh" id="refreshBtn">⟳ Refresh</button>
+      <button class="btn-reset" id="resetBtn">🗑 Reset Scores</button>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-card highlight">
+        <div class="stat-label">Total Participants</div>
+        <div class="stat-value" id="statTotal">—</div>
+        <div class="stat-sub">Unique submissions</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Highest Score</div>
+        <div class="stat-value" id="statHigh">—</div>
+        <div class="stat-sub" id="statHighName">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Score</div>
+        <div class="stat-value" id="statAvg">—</div>
+        <div class="stat-sub">Across all players</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-label">Bonus Completions</div>
+        <div class="stat-value" id="statBonus">—</div>
+        <div class="stat-sub">Finished under 10 min</div>
+      </div>
+    </div>
+
+    <!-- Full leaderboard + top bar chart -->
+    <div class="grid-2">
+
+      <div class="panel" style="grid-column: span 1;">
+        <div class="panel-head">
+          <span class="panel-title">🏆 Full Leaderboard</span>
+          <span id="lbCount" style="font-family:var(--mono);font-size:11px;color:var(--muted);">0 entries</span>
+        </div>
+        <div class="lb-scroll">
+          <table class="lb-table">
+            <thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead>
+            <tbody id="lbBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Top 10 bar chart -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Top 10 Scores</span></div>
+          <div class="panel-body">
+            <div class="bar-chart" id="barChart"></div>
+          </div>
+        </div>
+
+        <!-- Score distribution -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title"> Score Distribution</span></div>
+          <div class="panel-body" style="padding-top:12px;">
+            <canvas id="distChart"></canvas>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--muted);">0</span>
+              <span style="font-size:11px;color:var(--muted);">Max</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="grid-2">
+
+      <!-- Most missed questions -->
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title"> Most Missed Questions</span></div>
+        <div class="panel-body">
+          <div class="missed-list" id="missedList">
+            <div style="color:var(--muted);font-size:13px;">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Hint usage -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title"> Hint Usage</span></div>
+          <div class="panel-body">
+            <div class="hint-row">
+              <div class="hint-stat"><div class="hs-label">Total Hints Used</div><div class="hs-val" id="hintTotal">—</div></div>
+              <div class="hint-stat"><div class="hs-label">Avg per Player</div><div class="hs-val" id="hintAvg">—</div></div>
+              <div class="hint-stat"><div class="hs-label">Pts Lost to Hints</div><div class="hs-val" id="hintPtsLost">—</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title"> Recent Submissions</span></div>
+          <div class="panel-body" style="padding:0;">
+            <div id="recentList" style="max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /dashboard -->
+
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon"></div>
+    <div class="modal-title">Reset All Scores?</div>
+    <div class="modal-sub">This will permanently delete all <strong id="resetCount">0</strong> submissions from the database. This cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="cancelReset">Cancel</button>
+      <button class="modal-confirm" id="confirmReset">Yes, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  CONFIG — same JSONBin as quiz
+// ══════════════════════════════════════════
+const JSONBIN_BIN_ID  = "69eb8daa856a6821896b21d4";
+const JSONBIN_API_KEY = "$2a$10$hTG0V.Dqe1CdsxbfPlGgo.xFZ1bWRefv66Fesc8tQnbvt3WHam7VW";
+const JSONBIN_BASE    = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+
+// ── CHANGE THIS PASSWORD ──────────────────
+const ADMIN_PASSWORD = "gdg-atu-2025";
+// ─────────────────────────────────────────
+
+let scores = [];
+let autoRefreshTimer = null;
+
+// ── Auth ─────────────────────────────────
+const SESSION_KEY = "gdg_dash_auth";
+
+function isAuthed() {
+  return sessionStorage.getItem(SESSION_KEY) === "1";
+}
+
+document.getElementById('loginBtn').onclick = () => {
+  const val = document.getElementById('pwInput').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, "1");
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('loginError').style.display = 'flex';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+};
+
+document.getElementById('pwInput').onkeydown = e => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+};
+
+document.getElementById('logoutBtn').onclick = () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+};
+
+if (isAuthed()) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+// ── DB ────────────────────────────────────
+async function dbRead() {
+  const r = await fetch(JSONBIN_BASE + "/latest", {
+    headers: { "X-Master-Key": JSONBIN_API_KEY }
+  });
+  if (!r.ok) throw new Error("DB read failed");
+  return (await r.json()).record;
+}
+
+async function dbWrite(data) {
+  const r = await fetch(JSONBIN_BASE, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_API_KEY },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error("DB write failed");
+}
+
+// ── Toast ─────────────────────────────────
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── Load & Render ─────────────────────────
+async function loadAndRender() {
+  document.getElementById('refreshBtn').innerHTML = '<span class="spinner"></span>Refresh';
+  try {
+    const rec = await dbRead();
+    scores = (rec.scores || []).sort((a, b) => b.score - a.score);
+    render();
+  } catch(e) {
+    toast("⚠ Could not load data: " + e.message);
+  }
+  document.getElementById('refreshBtn').textContent = '⟳ Refresh';
+}
+
+function render() {
+  if (!scores.length) {
+    document.getElementById('lbBody').innerHTML =
+      '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--muted);">No submissions yet</td></tr>';
+    ['statTotal','statHigh','statAvg','statBonus','hintTotal','hintAvg','hintPtsLost'].forEach(id => {
+      document.getElementById(id).textContent = '0';
+    });
+    document.getElementById('statHighName').textContent = '—';
+    document.getElementById('lbCount').textContent = '0 entries';
+    document.getElementById('barChart').innerHTML = '<div style="color:var(--muted);font-size:13px;">No data</div>';
+    document.getElementById('missedList').innerHTML = '<div style="color:var(--muted);font-size:13px;">No data yet</div>';
+    document.getElementById('recentList').innerHTML = '';
+    drawDistChart([]);
+    return;
+  }
+
+  const n     = scores.length;
+  const total = scores.reduce((s, x) => s + (x.score || 0), 0);
+  const avg   = Math.round(total / n);
+  const bonus = scores.filter(s => s.bonusCompleted).length;
+  const hints = scores.reduce((s, x) => s + (x.hintsUsed || 0), 0);
+  const hintPts = hints * 5;
+
+  document.getElementById('statTotal').textContent = n;
+  document.getElementById('statHigh').textContent  = scores[0].score;
+  document.getElementById('statHighName').textContent = scores[0].name;
+  document.getElementById('statAvg').textContent   = avg;
+  document.getElementById('statBonus').textContent = bonus;
+  document.getElementById('hintTotal').textContent = hints;
+  document.getElementById('hintAvg').textContent   = (hints / n).toFixed(1);
+  document.getElementById('hintPtsLost').textContent = hintPts;
+  document.getElementById('lbCount').textContent   = `${n} entr${n === 1 ? 'y' : 'ies'}`;
+  document.getElementById('resetCount').textContent = n;
+
+  // ─ Leaderboard table
+  const tbody = document.getElementById('lbBody');
+  tbody.innerHTML = '';
+  scores.forEach((s, i) => {
+    const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+    const rankIcon  = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1);
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td class="lb-rank ${rankClass}">${rankIcon}</td>
+        <td class="lb-name">${escHtml(s.name)}${s.bonusCompleted ? '<span class="lb-bonus">🔥</span>' : ''}</td>
+        <td class="lb-score">${s.score}</td>
+        <td class="lb-time">${s.time || '--'}</td>
+      </tr>`);
+  });
+
+  // ─ Top 10 bar chart
+  const top10  = scores.slice(0, 10);
+  const maxSc  = top10[0].score || 1;
+  document.getElementById('barChart').innerHTML = top10.map(s => `
+    <div class="bar-row">
+      <div class="bar-label" title="${escHtml(s.name)}">${escHtml(s.name)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(s.score/maxSc*100).toFixed(1)}%"></div></div>
+      <div class="bar-val">${s.score}</div>
+    </div>`).join('');
+
+  // ─ Score distribution
+  drawDistChart(scores.map(s => s.score));
+
+  // ─ Recent (last 8 by timestamp)
+  const recent = [...scores].sort((a,b) => (b.timestamp||0) - (a.timestamp||0)).slice(0, 8);
+  document.getElementById('recentList').innerHTML = recent.map(s => `
+    <div style="padding:10px 20px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);">${escHtml(s.name)}</div>
+        <div style="font-size:11px;color:var(--muted);">${s.timestamp ? new Date(s.timestamp).toLocaleTimeString() : '--'}</div>
+      </div>
+      <div style="font-family:var(--mono);font-size:14px;color:var(--red);font-weight:700;">${s.score}</div>
+    </div>`).join('');
+
+  // ─ Most missed (needs per-answer data — show placeholder based on score buckets)
+  const lowScorers = scores.filter(s => s.score < avg);
+  document.getElementById('missedList').innerHTML = lowScorers.length
+    ? '<div style="color:var(--muted);font-size:13px;padding:4px 0;">Per-question miss data requires answer tracking.<br>Enable in quiz JS to see granular stats here.</div>'
+    : '<div style="color:var(--green);font-size:13px;">Great performance! Most players scored above average.</div>';
+}
+
+function drawDistChart(scoreArr) {
+  const canvas = document.getElementById('distChart');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 400;
+  const H = 160;
+  canvas.width  = W;
+  canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+
+  if (!scoreArr.length) {
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'var(--muted)';
+    ctx.font = '13px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No data yet', W/2, H/2);
+    return;
+  }
+
+  const BINS = 10;
+  const minS = 0;
+  const maxS = Math.max(...scoreArr, 1);
+  const binW = (maxS - minS) / BINS;
+  const bins = new Array(BINS).fill(0);
+  scoreArr.forEach(s => {
+    const b = Math.min(Math.floor((s - minS) / binW), BINS - 1);
+    bins[b]++;
+  });
+  const maxBin = Math.max(...bins, 1);
+  const barW   = (W - 20) / BINS;
+  const padB   = 24;
+
+  bins.forEach((count, i) => {
+    const bh   = ((count / maxBin) * (H - padB - 10));
+    const x    = 10 + i * barW;
+    const y    = H - padB - bh;
+
+    // gradient fill
+    const grd = ctx.createLinearGradient(0, y, 0, H - padB);
+    grd.addColorStop(0, 'rgba(232,41,76,0.8)');
+    grd.addColorStop(1, 'rgba(240,98,146,0.3)');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.roundRect(x + 2, y, barW - 4, bh, 3);
+    ctx.fill();
+
+    // x label
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.font = '9px Space Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(Math.round(minS + i * binW), x + barW/2, H - 6);
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Refresh ───────────────────────────────
+document.getElementById('refreshBtn').onclick = loadAndRender;
+
+// ── Reset ─────────────────────────────────
+document.getElementById('resetBtn').onclick = () => {
+  document.getElementById('resetCount').textContent = scores.length;
+  document.getElementById('confirmModal').classList.add('open');
+};
+document.getElementById('cancelReset').onclick = () => {
+  document.getElementById('confirmModal').classList.remove('open');
+};
+document.getElementById('confirmReset').onclick = async () => {
+  document.getElementById('confirmModal').classList.remove('open');
+  document.getElementById('refreshBtn').innerHTML = '<span class="spinner"></span>Resetting...';
+  try {
+    await dbWrite({ scores: [] });
+    scores = [];
+    render();
+    toast(' All scores have been reset');
+  } catch(e) {
+    toast('⚠ Reset failed: ' + e.message);
+  }
+  document.getElementById('refreshBtn').textContent = '⟳ Refresh';
+};
+
+// ── Auto refresh every 30s ────────────────
+function startAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(loadAndRender, 30000);
+}
+
+// ── Init ──────────────────────────────────
+function init() {
+  loadAndRender();
+  startAutoRefresh();
+}
+
+if (isAuthed()) init();
+
+// ══════════════════════════════════════════
+//  Background neural canvas
+// ══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, nodes;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function initNodes() {
+    nodes = Array.from({ length: 30 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: rand(-0.18, 0.18), vy: rand(-0.18, 0.18), r: rand(2, 4.5)
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        const dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+        const d  = Math.hypot(dx, dy);
+        if (d < 140) {
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(232,41,76,${(1-d/140)*0.08})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,41,76,0.2)';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); initNodes(); });
+  resize(); initNodes(); draw();
+})();
+</script>
+</body>
+</html>

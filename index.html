@@ -6,16 +6,11 @@
 <title>ML Mastery Quiz | GDG Al-Hussein Technical University</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --red: #E8294C;
     --pink: #F06292;
-    --light-pink: #F8BBD9;
     --dark: #F4F6F8;
     --card: #FFFFFF;
     --card2: #F9FAFB;
@@ -26,965 +21,684 @@
     --sans: 'Outfit', sans-serif;
   }
 
-  body {
-    font-family: var(--sans);
-    background: var(--dark);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  body { font-family: var(--sans); background: var(--dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  #neuralCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
   .bg-mesh {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(232,41,76,0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 60% at 85% 80%, rgba(240,98,146,0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(232,41,76,0.03) 0%, transparent 80%);
-  }
-
-  .bg-dots {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: radial-gradient(rgba(232,41,76,0.08) 1px, transparent 1px);
-    background-size: 32px 32px;
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 15%, rgba(232,41,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 85% 80%, rgba(240,98,146,0.05) 0%, transparent 70%);
   }
 
   #app {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: relative; z-index: 2; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 32px 24px;
   }
 
+  /* Header */
   .logo-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    animation: fadeDown 0.6s ease both;
-    width: 100%;
-    max-width: 400px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    margin-bottom: 24px; animation: fadeDown 0.6s ease both; width: 100%; max-width: 400px;
   }
-
-  .logo-header img {
-    max-width: 100%;
-    height: auto;
-    max-height: 90px;
-    object-fit: contain;
-  }
-
   .gdg-label {
-    font-family: var(--sans);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--red);
-    opacity: 0.9;
-    margin-top: 8px;
-    text-align: center;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red); opacity: 0.9; text-align: center;
   }
 
+  /* Card */
   .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    box-shadow: 0 20px 40px -10px rgba(232, 41, 76, 0.08), 0 4px 12px rgba(0,0,0,0.02);
-    width: 100%;
-    max-width: 780px;
-    transition: all 0.2s;
+    background: var(--card); border: 1px solid var(--border); border-radius: 28px;
+    box-shadow: 0 20px 40px -10px rgba(232,41,76,0.08), 0 4px 12px rgba(0,0,0,0.02);
+    width: 100%; max-width: 780px;
   }
+  .card-inner { padding: 36px 40px; }
+  @media (max-width: 640px) { .card-inner { padding: 28px 20px; } }
 
-  .card-inner {
-    padding: 36px 40px;
-  }
-
-  @media (max-width: 640px) {
-    .card-inner {
-      padding: 28px 20px;
-    }
-  }
-
+  /* Landing */
   .landing-title {
-    font-size: clamp(32px, 7vw, 64px);
-    font-weight: 900;
-    line-height: 1.05;
+    font-size: clamp(32px,7vw,64px); font-weight: 900; line-height: 1.05;
     background: linear-gradient(135deg, var(--text) 30%, var(--red) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     margin-bottom: 12px;
   }
-
-  .landing-sub {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 28px;
-    line-height: 1.5;
-  }
+  .landing-sub { color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
 
   .name-form {
-    background: rgba(232,41,76,0.02);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 20px 0;
-    border: 1px solid var(--border);
+    background: rgba(232,41,76,0.02); border-radius: 20px; padding: 20px;
+    margin: 20px 0; border: 1px solid var(--border);
   }
-
   .name-input {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid rgba(232,41,76,0.3);
-    border-radius: 60px;
-    padding: 14px 20px;
-    font-family: var(--sans);
-    font-size: 16px;
-    color: var(--text);
-    outline: none;
-    transition: all 0.2s;
+    width: 100%; background: var(--card); border: 1px solid rgba(232,41,76,0.3);
+    border-radius: 60px; padding: 14px 20px; font-family: var(--sans); font-size: 16px;
+    color: var(--text); outline: none; transition: all 0.2s;
   }
-
-  .name-input:focus {
-    border-color: var(--red);
-    box-shadow: 0 0 0 4px rgba(232,41,76,0.1);
-  }
-
-  .name-input::placeholder {
-    color: #9CA3AF;
-  }
-
-  .error-msg {
-    color: var(--red);
-    font-size: 13px;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .name-input:focus { border-color: var(--red); box-shadow: 0 0 0 4px rgba(232,41,76,0.1); }
+  .name-input::placeholder { color: #9CA3AF; }
+  .error-msg { color: var(--red); font-size: 13px; margin-top: 8px; display: flex; align-items: center; gap: 6px; }
 
   .badge {
-    display: inline-block;
-    background: rgba(232,41,76,0.1);
-    border: 1px solid rgba(232,41,76,0.2);
-    color: var(--red);
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 6px;
-    padding: 2px 10px;
-    letter-spacing: 0.08em;
+    display: inline-block; background: rgba(232,41,76,0.1); border: 1px solid rgba(232,41,76,0.2);
+    color: var(--red); font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 10px; letter-spacing: 0.08em;
   }
+  .landing-meta { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 8px; }
+  .landing-meta p { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; margin: 8px 0; }
 
-  .landing-meta {
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-    margin-top: 8px;
-  }
-
-  .landing-meta p {
-    font-size: 13px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-  }
-
+  /* Buttons */
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     background: linear-gradient(135deg, var(--red) 0%, #c0184e 100%);
-    color: #fff;
-    font-family: var(--sans);
-    font-weight: 700;
-    font-size: 16px;
-    padding: 14px 32px;
-    border-radius: 100px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(232,41,76,0.25);
-    transition: transform 0.15s, box-shadow 0.15s;
-    width: 100%;
+    color: #fff; font-family: var(--sans); font-weight: 700; font-size: 16px;
+    padding: 14px 32px; border-radius: 100px; border: none; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(232,41,76,0.25); transition: transform 0.15s, box-shadow 0.15s; width: 100%;
   }
-
-  .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(232,41,76,0.35);
-  }
-
-  .btn-primary:active {
-    transform: scale(0.98);
-  }
-
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(232,41,76,0.35); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
   .btn-ghost {
-    background: rgba(232,41,76,0.05);
-    border: 1px solid var(--border);
-    color: var(--red);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 10px 22px;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: all 0.15s;
+    background: rgba(232,41,76,0.05); border: 1px solid var(--border); color: var(--red);
+    font-weight: 600; font-size: 14px; padding: 10px 22px; border-radius: 100px;
+    cursor: pointer; transition: all 0.15s;
   }
+  .btn-ghost:hover:not(:disabled) { background: rgba(232,41,76,0.1); border-color: rgba(232,41,76,0.3); }
+  .btn-ghost:disabled { opacity: 0.3; cursor: default; }
 
-  .btn-ghost:hover:not(:disabled) {
-    background: rgba(232,41,76,0.1);
-    border-color: rgba(232,41,76,0.3);
+  .btn-hint {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3);
+    color: #D97706; font-weight: 600; font-size: 13px; padding: 8px 18px;
+    border-radius: 100px; cursor: pointer; transition: all 0.15s; font-family: var(--sans);
   }
+  .btn-hint:hover:not(:disabled) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
+  .btn-hint:disabled { opacity: 0.35; cursor: default; }
+  .btn-hint .hint-cost { font-family: var(--mono); font-size: 11px; opacity: 0.8; }
 
-  .btn-ghost:disabled {
-    opacity: 0.3;
-    cursor: default;
+  /* Hint box */
+  .hint-box {
+    margin: 0 32px 16px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 14px; padding: 14px 18px; font-size: 14px; color: #92400E; line-height: 1.5;
+    animation: fadeUp 0.3s ease;
   }
+  .hint-box strong { color: #D97706; }
 
+  /* Quiz topbar */
   .quiz-topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 20px 32px 0;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    padding: 20px 32px 16px; border-bottom: 1px solid var(--border);
   }
-
   .q-chip, .score-chip, .timer-chip {
-    font-family: var(--mono);
-    font-size: 13px;
-    background: rgba(232,41,76,0.05);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 14px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
+    font-family: var(--mono); font-size: 13px; background: rgba(232,41,76,0.05);
+    border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 10px;
+    display: flex; align-items: center; gap: 6px; font-weight: 600;
   }
+  .score-chip, .timer-chip { background: var(--card2); }
+  .timer-chip.warning { color: var(--red); border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.05); animation: pulseWarning 1s infinite; }
+  @keyframes pulseWarning { 0%,100% { box-shadow: 0 0 0 0 rgba(232,41,76,0); } 50% { box-shadow: 0 0 0 4px rgba(232,41,76,0.15); } }
 
-  .score-chip, .timer-chip {
-    background: var(--card2);
-  }
+  /* Progress */
+  .progress-wrap { padding: 16px 32px 0; }
+  .progress-track { background: rgba(0,0,0,0.05); border-radius: 100px; height: 6px; }
+  .progress-fill { background: linear-gradient(90deg, var(--red), var(--pink)); height: 6px; border-radius: 100px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
 
-  .timer-chip.warning {
-    color: var(--red);
-    border-color: rgba(232,41,76,0.4);
-    background: rgba(232,41,76,0.05);
-    animation: pulseWarning 1s infinite;
-  }
-
-  @keyframes pulseWarning {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(232,41,76,0); }
-    50% { box-shadow: 0 0 0 4px rgba(232,41,76,0.15); }
-  }
-
-  .progress-wrap {
-    padding: 16px 32px 0;
-  }
-
-  .progress-track {
-    background: rgba(0,0,0,0.05);
-    border-radius: 100px;
-    height: 6px;
-  }
-
-  .progress-fill {
-    background: linear-gradient(90deg, var(--red), var(--pink));
-    height: 6px;
-    border-radius: 100px;
-    transition: width 0.4s cubic-bezier(.4,0,.2,1);
-  }
-
-  .question-area {
-    padding: 24px 32px 0;
-  }
-
-  .diff-badge {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 6px;
-    display: inline-block;
-    margin-bottom: 16px;
-  }
-
+  /* Question */
+  .question-area { padding: 24px 32px 0; }
+  .diff-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 16px; }
   .diff-easy   { background: rgba(72,199,142,0.1); color: #2E8B57; border: 1px solid rgba(72,199,142,0.3); }
   .diff-medium { background: rgba(245,158,11,0.1); color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
-  .diff-hard   { background: rgba(232,41,76,0.1); color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
+  .diff-hard   { background: rgba(232,41,76,0.1);  color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
+  #questionText { font-size: clamp(18px,3vw,24px); font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 24px; }
 
-  #questionText {
-    font-size: clamp(18px, 3vw, 24px);
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--text);
-    margin-bottom: 24px;
-  }
-
-  .options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 0 32px 24px;
-  }
-
+  /* Options */
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 32px 16px; }
   @media (max-width: 640px) {
-    .options-grid {
-      grid-template-columns: 1fr;
-      padding: 0 20px 20px;
-    }
-    .quiz-topbar, .progress-wrap, .question-area {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
+    .options-grid { grid-template-columns: 1fr; padding: 0 20px 16px; }
+    .quiz-topbar, .progress-wrap, .question-area { padding-left: 20px; padding-right: 20px; }
+    .hint-box { margin: 0 20px 12px; }
+    .quiz-footer { padding: 0 20px 24px; }
   }
-
   .opt-btn {
-    text-align: left;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    color: var(--text);
-    font-size: 15px;
-    font-weight: 500;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    text-align: left; background: var(--card2); border: 1px solid var(--border); border-radius: 14px;
+    color: var(--text); font-size: 15px; font-weight: 500; padding: 14px 16px; cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 12px;
   }
-
-  .opt-btn:hover:not(.answered) {
-    border-color: rgba(232,41,76,0.4);
-    background: rgba(232,41,76,0.03);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(232,41,76,0.05);
-  }
-
+  .opt-btn:hover:not(.answered) { border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.03); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,41,76,0.05); }
   .opt-label {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--muted);
+    width: 28px; height: 28px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
+    display: flex; align-items: center; justify-content: center; font-family: var(--mono);
+    font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0;
+  }
+  .opt-btn.correct { border-color: #48C78E; background: rgba(72,199,142,0.05); color: #1A5336; }
+  .opt-btn.correct .opt-label { background: #48C78E; border-color: #48C78E; color: #fff; }
+  .opt-btn.wrong   { border-color: var(--red); background: rgba(232,41,76,0.05); color: var(--red); }
+  .opt-btn.wrong .opt-label { background: var(--red); border-color: var(--red); color: #fff; }
+  .opt-btn.answered { cursor: default; }
+
+  /* Footer */
+  .quiz-footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 32px 28px; gap: 12px; }
+  .footer-left { display: flex; gap: 10px; align-items: center; }
+
+  /* ════ COMPLETION SCREEN ════ */
+  .complete-wrap { padding: 48px 40px 44px; text-align: center; }
+  @media (max-width: 640px) { .complete-wrap { padding: 36px 24px 36px; } }
+
+  .complete-emoji {
+    font-size: 72px; display: block; margin-bottom: 20px;
+    animation: popIn 0.55s cubic-bezier(.175,.885,.32,1.275) both;
+  }
+  @keyframes popIn { from { opacity:0; transform:scale(0.4); } to { opacity:1; transform:scale(1); } }
+
+  .complete-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 8px;
+  }
+  .complete-name {
+    font-size: clamp(18px,4vw,26px); font-weight: 900; color: var(--text);
+    margin-bottom: 32px; line-height: 1.25;
   }
 
-  .opt-btn.correct {
-    border-color: #48C78E;
-    background: rgba(72,199,142,0.05);
-    color: #1A5336;
+  .score-ring {
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 180px; height: 180px; border-radius: 50%;
+    border: 3px solid rgba(232,41,76,0.12);
+    background: radial-gradient(circle at 50% 40%, rgba(232,41,76,0.06) 0%, transparent 70%);
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease 0.25s both;
   }
-
-  .opt-btn.correct .opt-label {
-    background: #48C78E;
-    border-color: #48C78E;
-    color: #fff;
-  }
-
-  .opt-btn.wrong {
-    border-color: var(--red);
-    background: rgba(232,41,76,0.05);
-    color: var(--red);
-  }
-
-  .opt-btn.wrong .opt-label {
-    background: var(--red);
-    border-color: var(--red);
-    color: #fff;
-  }
-
-  .opt-btn.answered {
-    cursor: default;
-  }
-
-  .quiz-footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 32px 28px;
-    gap: 12px;
-  }
-
-  .results-header {
-    text-align: center;
-    padding: 32px 32px 24px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .results-title {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red);
-  }
-
-  .results-score {
-    font-family: var(--mono);
-    font-size: clamp(48px, 10vw, 80px);
-    font-weight: 700;
+  .score-ring .sr-num {
+    font-family: var(--mono); font-size: clamp(42px,10vw,60px); font-weight: 700; line-height: 1;
     background: linear-gradient(135deg, var(--red), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .score-ring .sr-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
   }
 
-  .results-meta {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    margin-top: 16px;
-    flex-wrap: wrap;
+  .stats-strip {
+    display: flex; gap: 0; border: 1px solid var(--border); border-radius: 18px;
+    overflow: hidden; margin-bottom: 24px;
   }
-
-  .results-meta-item .label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .results-meta-item .val {
-    font-family: var(--mono);
-    font-size: 20px;
-    color: var(--text);
-    font-weight: 700;
-  }
+  .stat-cell { flex: 1; padding: 16px 12px; border-right: 1px solid var(--border); }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell .sc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .stat-cell .sc-val   { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text); }
 
   .bonus-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(232,41,76,0.05);
-    border: 1px solid rgba(232,41,76,0.2);
-    color: var(--red);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 8px 18px;
-    border-radius: 100px;
-    margin-top: 16px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(232,41,76,0.05); border: 1px solid rgba(232,41,76,0.2);
+    color: var(--red); font-size: 13px; font-weight: 700;
+    padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
   }
 
-  .lb-section {
-    padding: 24px 32px 32px;
+  .complete-note {
+    background: rgba(232,41,76,0.03); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 20px;
+    font-size: 14px; color: var(--muted); line-height: 1.65;
   }
+  .complete-note strong { color: var(--text); }
 
-  .lb-title {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .lb-scroll {
-    max-height: 280px;
-    overflow-y: auto;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: var(--card2);
-  }
-
-  .lb-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .lb-table th {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    background: rgba(0,0,0,0.02);
-  }
-
-  .lb-table td {
-    padding: 12px 16px;
-    font-size: 14px;
-    color: var(--text);
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-  }
-
-  .lb-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .lb-table tr.me {
-    background: rgba(232,41,76,0.06);
-    font-weight: 600;
-  }
-
-  .lb-rank.top {
-    color: var(--red);
-    font-weight: 700;
-  }
-
-  .lb-score {
-    font-family: var(--mono);
-    color: var(--red);
-    font-weight: 700;
-  }
-
+  /* Toasts */
   .multiplier-toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: fixed; top: 20px; right: 20px;
     background: linear-gradient(135deg, var(--red), var(--pink));
-    color: #fff;
-    font-family: var(--mono);
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 12px;
-    z-index: 200;
+    color: #fff; font-family: var(--mono); font-weight: 700;
+    padding: 10px 20px; border-radius: 12px; z-index: 200;
     box-shadow: 0 8px 24px rgba(232,41,76,0.3);
     animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards;
   }
-
-  @keyframes toastIn {
-    from { opacity: 0; transform: translateX(40px); }
-    to { opacity: 1; transform: none; }
+  .hint-toast {
+    position: fixed; top: 20px; right: 20px;
+    background: linear-gradient(135deg, #D97706, #F59E0B);
+    color: #fff; font-family: var(--mono); font-weight: 700;
+    padding: 10px 20px; border-radius: 12px; z-index: 200;
+    box-shadow: 0 8px 24px rgba(217,119,6,0.3);
+    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards;
   }
-
-  @keyframes toastOut {
-    from { opacity: 1; transform: none; }
-    to { opacity: 0; transform: translateX(40px); }
-  }
+  @keyframes toastIn  { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:none; } }
+  @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateX(40px); } }
 
   .bonus-banner {
-    background: rgba(232,41,76,0.05);
-    border-top: 1px solid rgba(232,41,76,0.15);
-    border-bottom: 1px solid rgba(232,41,76,0.15);
-    color: var(--red);
-    text-align: center;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 12px;
-    margin: 12px 32px 0;
-    border-radius: 8px;
+    background: rgba(232,41,76,0.05); border-top: 1px solid rgba(232,41,76,0.15);
+    border-bottom: 1px solid rgba(232,41,76,0.15); color: var(--red);
+    text-align: center; font-weight: 700; font-size: 13px;
+    padding: 12px; margin: 12px 32px 0; border-radius: 8px;
   }
 
-  .hidden {
-    display: none !important;
+  /* Loading */
+  .loading-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(244,246,248,0.9); backdrop-filter: blur(4px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
   }
+  .loading-spinner {
+    width: 40px; height: 40px; border: 3px solid rgba(232,41,76,0.15);
+    border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: var(--mono); font-size: 14px; color: var(--muted); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .dashboard-link {
-    text-align: center;
-    margin-top: 16px;
-  }
-
-  .leaderboard-preview {
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .leaderboard-preview:hover {
-    background: rgba(232,41,76,0.02);
-  }
+  .hidden { display: none !important; }
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
 </style>
 </head>
 <body>
+
+<canvas id="neuralCanvas"></canvas>
 <div class="bg-mesh"></div>
-<div class="bg-dots"></div>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Connecting to database...</div>
+</div>
 
 <div id="app">
+
   <div class="logo-header">
-    <img src="image.png" alt="GDG Logo">
-    <div class="gdg-label">Google Developers Group</div>
+    <div style="font-size:44px;">🧠</div>
+    <div class="gdg-label">GDG · Al-Hussein Technical University</div>
   </div>
 
-  <div id="landingPage" class="card">
+  <!-- ════ LANDING ════ -->
+  <div id="landingPage" class="card hidden">
     <div class="card-inner">
       <p style="font-size:12px;font-weight:700;letter-spacing:0.2em;color:var(--red);margin-bottom:12px;">ML MASTERY CHALLENGE</p>
       <h1 class="landing-title">TEST YOUR<br>ML KNOWLEDGE</h1>
-      <p class="landing-sub">Supervised learning - Clustering - Evaluation metrics - Speed bonus</p>
+      <p class="landing-sub">Supervised learning · Clustering · Evaluation metrics · Speed bonus</p>
 
       <div class="name-form">
-        <input type="text" id="playerNameInput" class="name-input" placeholder="Enter your name (required)" maxlength="30" autocomplete="off">
-        <div id="nameError" class="error-msg hidden">Please enter your name to start</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:10px;">One attempt per user - your score will be saved on the leaderboard.</div>
+        <input type="text" id="playerNameInput" class="name-input"
+               placeholder="Enter your name (required)" maxlength="30" autocomplete="off">
+        <div id="nameError" class="error-msg hidden">⚠ Please enter your name to start</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;">
+          One attempt per user · Results will be announced by the organizers.
+        </div>
       </div>
 
-      <button id="startQuizBtn" class="btn-primary">Start Exam</button>
+      <button id="startQuizBtn" class="btn-primary">🚀 Start Exam</button>
 
       <div class="landing-meta">
         <p><span class="badge">20 Core Qs</span> + Bonus round if fast</p>
-        <p><span class="badge">20 Minutes</span> Speed = multiplier up to 1.5x</p>
+        <p><span class="badge">20 Minutes</span> Speed = multiplier up to 1.5×</p>
         <p><span class="badge">Under 10 min</span> unlocks 5 hard bonus questions</p>
-      </div>
-
-      <div class="dashboard-link">
-        <button id="toggleLeaderboardBtn" class="btn-ghost" style="width:100%;margin-top:8px;">Show Leaderboard</button>
-      </div>
-
-      <div id="leaderboardPreview" class="hidden" style="margin-top:20px;">
-        <div class="lb-title" style="margin-bottom:8px;">Top Scores</div>
-        <div class="lb-scroll" style="max-height:240px;">
-          <table class="lb-table">
-            <thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead>
-            <tbody id="previewLeaderboardBody"></tbody>
-          </table>
-        </div>
+        <p><span class="badge">💡 Hints</span> available · costs <strong>5 pts</strong> each</p>
       </div>
     </div>
   </div>
 
+  <!-- ════ QUIZ ════ -->
   <div id="quizContainer" class="card hidden">
     <div class="quiz-topbar">
       <div style="display:flex;gap:10px;">
-        <div class="q-chip">Q: <span id="currentQNum">1</span><span style="color:var(--muted);">/20</span></div>
-        <div class="score-chip">Score: <span id="liveScore">0</span></div>
+        <div class="q-chip">Q <span id="currentQNum">1</span><span id="qTotal" style="color:var(--muted);">/20</span></div>
+        <div class="score-chip">⭐ <span id="liveScore">0</span></div>
       </div>
-      <div class="timer-chip" id="timerChip">Time: <span id="timerDisplay">20:00</span></div>
+      <div class="timer-chip" id="timerChip">⏱ <span id="timerDisplay">20:00</span></div>
     </div>
-    <div class="progress-wrap"><div class="progress-track"><div id="quizProgress" class="progress-fill" style="width:0%"></div></div></div>
-    <div id="bonusBanner" class="bonus-banner hidden">BONUS ROUND UNLOCKED - 5 Hard Questions Added!</div>
+
+    <div class="progress-wrap">
+      <div class="progress-track"><div id="quizProgress" class="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="bonusBanner" class="bonus-banner hidden">🔥 BONUS ROUND UNLOCKED — 5 Hard Questions Added!</div>
+
     <div class="question-area">
       <div id="diffBadge" class="diff-badge diff-easy">Easy</div>
       <div id="questionText">Loading...</div>
     </div>
+
     <div class="options-grid" id="optionsContainer"></div>
+    <div id="hintBox" class="hint-box hidden"></div>
+
     <div class="quiz-footer">
-      <button id="prevBtn" class="btn-ghost" disabled>Prev</button>
-      <button id="nextBtn" class="btn-primary" style="padding:12px 28px;">Next</button>
+      <div class="footer-left">
+        <button id="prevBtn" class="btn-ghost" disabled>← Prev</button>
+        <button id="hintBtn" class="btn-hint">💡 Hint <span class="hint-cost">(-5 pts)</span></button>
+      </div>
+      <button id="nextBtn" class="btn-primary" style="width:auto;padding:12px 28px;">Next →</button>
     </div>
   </div>
 
+  <!-- ════ COMPLETION — personal score only, zero leaderboard ════ -->
   <div id="resultsDashboard" class="card hidden">
-    <div class="results-header">
-      <div class="results-title">Exam Complete</div>
-      <div class="results-score" id="finalScoreSpan">0</div>
-      <div class="results-meta">
-        <div class="results-meta-item"><div class="label">Time Used</div><div class="val" id="finalTimeSpan">--</div></div>
-        <div class="results-meta-item"><div class="label">Accuracy</div><div class="val"><span id="accuracySpan">0</span>%</div></div>
+    <div class="complete-wrap">
+      <span class="complete-emoji">🎉</span>
+      <div class="complete-eyebrow">Exam Complete</div>
+      <div class="complete-name" id="completeName">Well done!</div>
+
+      <div class="score-ring">
+        <span class="sr-num" id="finalScoreSpan">0</span>
+        <span class="sr-label">points</span>
       </div>
-      <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed!</div>
-    </div>
-    <div class="lb-section">
-      <div class="lb-title"><span>Full Leaderboard</span><span class="lb-reset" style="font-size: 10px;">Live Sync</span></div>
-      <div class="lb-scroll"><table class="lb-table"><thead><tr><th>#</th><th>Player</th><th>Score</th><th>Time</th></tr></thead><tbody id="leaderboardBody"></tbody></table></div>
+
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <div class="sc-label">Time Used</div>
+          <div class="sc-val" id="finalTimeSpan">--</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-label">Accuracy</div>
+          <div class="sc-val"><span id="accuracySpan">0</span>%</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-label">Hints Used</div>
+          <div class="sc-val" id="hintsUsedSpan">0</div>
+        </div>
+      </div>
+
+      <div id="bonusBadge" class="bonus-badge hidden">🔥 Bonus Round Completed!</div>
+
+      <div class="complete-note">
+        Your score has been saved successfully.<br>
+        <strong>Rankings will be announced by the organizers.</strong> Good luck! 🍀
+      </div>
     </div>
   </div>
+
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+<script>
+// ══════════════════════════════════
+//  JSONBIN CONFIG
+// ══════════════════════════════════
+const JSONBIN_BIN_ID  = "69eb8daa856a6821896b21d4";
+const JSONBIN_API_KEY = "$2a$10$hTG0V.Dqe1CdsxbfPlGgo.xFZ1bWRefv66Fesc8tQnbvt3WHam7VW";
+const JSONBIN_BASE    = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
-  // REPLACE THIS ENTIRE CONFIG OBJECT WITH YOUR KEYS FROM FIREBASE
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  let globalScores = []; // Holds the synced cloud database scores
-
-  // Listen for real-time updates from Firestore
-  const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(100));
-  onSnapshot(q, (snapshot) => {
-    globalScores = [];
-    snapshot.forEach((doc) => {
-      globalScores.push(doc.data());
-    });
-    renderLeaderboardTables();
+async function dbRead() {
+  const r = await fetch(JSONBIN_BASE + "/latest", { headers: { "X-Master-Key": JSONBIN_API_KEY } });
+  if (!r.ok) throw new Error("DB read failed");
+  return (await r.json()).record;
+}
+async function dbWrite(data) {
+  const r = await fetch(JSONBIN_BASE, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_API_KEY },
+    body: JSON.stringify(data)
   });
+  if (!r.ok) throw new Error("DB write failed");
+}
 
-  async function saveScore(entry) {
-    try {
-      await addDoc(collection(db, "leaderboard"), entry);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+let globalScores = [];
+async function loadScores() {
+  const rec = await dbRead();
+  globalScores = rec.scores || [];
+}
+async function saveScore(entry) {
+  const rec    = await dbRead();
+  const scores = rec.scores || [];
+  scores.push(entry);
+  scores.sort((a, b) => b.score - a.score);
+  await dbWrite({ scores });
+  globalScores = scores;
+}
+function checkUserAttempt(name) {
+  return globalScores.some(s => s.name.toLowerCase() === name.toLowerCase());
+}
+
+// ══════════════════════════════════
+//  QUIZ DATA
+// ══════════════════════════════════
+const coreQuestions = [
+  { text:"What is the main difference between Traditional Programming and Machine Learning?", options:["ML uses hardcoded rules","ML learns patterns from data","No difference","ML requires more hardware"], correct:1, difficulty:"easy", points:10, hint:"Think about whether the rules are written by a programmer or derived from examples." },
+  { text:"Which of the following is a supervised learning task?", options:["Clustering","Dimensionality Reduction","Classification","Association Rules"], correct:2, difficulty:"easy", points:10, hint:"Supervised learning requires labeled training data — you know the expected output." },
+  { text:"Handling missing values by replacing with column mean is known as?", options:["Drop","Imputation","Encoding","Normalization"], correct:1, difficulty:"easy", points:10, hint:"This technique 'fills in' missing values rather than removing rows entirely." },
+  { text:"StandardScaler in sklearn does what?", options:["Scales to [0,1]","Centers to mean=0, variance=1","Removes outliers","Encodes categories"], correct:1, difficulty:"easy", points:10, hint:"Think Z-score normalization: (x − μ) / σ." },
+  { text:"Which metric is best for imbalanced classification?", options:["Accuracy","Precision and Recall","Mean Absolute Error","R-squared"], correct:1, difficulty:"medium", points:15, hint:"When one class has very few samples, overall accuracy is misleading." },
+  { text:"Logistic Regression outputs:", options:["Probability between 0 and 1","Linear value","Class label only","Distance"], correct:0, difficulty:"easy", points:10, hint:"The sigmoid function squashes any real number into a specific range." },
+  { text:"What does K represent in K-Means clustering?", options:["Number of features","Number of clusters","Number of iterations","Distance metric"], correct:1, difficulty:"easy", points:10, hint:"You choose this value before running the algorithm." },
+  { text:"Silhouette Score measures:", options:["Cluster density","How similar a point is to its own cluster vs others","Distance to centroid","Accuracy of classification"], correct:1, difficulty:"medium", points:15, hint:"A score close to +1 means the point is well matched to its cluster." },
+  { text:"Which of the following is an unsupervised learning algorithm?", options:["Decision Tree","Linear Regression","K-Means","Logistic Regression"], correct:2, difficulty:"easy", points:10, hint:"Unsupervised algorithms work without labeled data." },
+  { text:"What is the purpose of feature scaling?", options:["Prevents features with larger ranges from dominating","Removes missing data","Increases accuracy always","Converts text to numbers"], correct:0, difficulty:"easy", points:10, hint:"Consider an algorithm that uses distances — a feature in kilometers vs. millimeters." },
+  { text:"In Decision Trees, splitting is based on:", options:["P-value","Information Gain / Gini Impurity","Gradient Descent","Euclidean Distance"], correct:1, difficulty:"medium", points:15, hint:"The algorithm tries to make each child node as 'pure' as possible." },
+  { text:"Precision is defined as:", options:["TP/(TP+FN)","TP/(TP+FP)","TN/(TN+FP)","Accuracy/Recall"], correct:1, difficulty:"medium", points:15, hint:"Precision focuses on: of everything predicted positive, how many actually were?" },
+  { text:"What is a centroid in K-Means?", options:["The mean of all points in a cluster","The farthest point","The median point","Randomly initialized boundary"], correct:0, difficulty:"easy", points:10, hint:"It's the geometric center recalculated each iteration." },
+  { text:"Which method helps find optimal K in K-Means?", options:["Elbow Method","Confusion Matrix","ROC Curve","Cross-Validation"], correct:0, difficulty:"medium", points:15, hint:"Plot inertia vs K and look for the 'bend' in the graph." },
+  { text:"Which evaluation metric is used for regression problems?", options:["Accuracy","R-squared","Precision","Silhouette Score"], correct:1, difficulty:"easy", points:10, hint:"Regression predicts continuous values, not class labels." },
+  { text:"What does a high Recall indicate?", options:["Few false positives","Few false negatives","High overall accuracy","Low precision"], correct:1, difficulty:"medium", points:15, hint:"Recall = TP / (TP + FN). High recall means you're missing fewer positives." },
+  { text:"In Linear Regression, feature selection helps:", options:["Reduce overfitting and improve interpretability","Increase training time","Convert categorical data","Normalize data"], correct:0, difficulty:"easy", points:10, hint:"Using only relevant features removes noise from the model." },
+  { text:"Which library is primarily used for data manipulation in Python?", options:["NumPy","Pandas","Matplotlib","Scikit-learn"], correct:1, difficulty:"easy", points:10, hint:"It provides DataFrames — think spreadsheets in Python." },
+  { text:"What is the threshold typically used in logistic regression for binary classification?", options:["0.3","0.5","0.7","1.0"], correct:1, difficulty:"easy", points:10, hint:"The default splits the probability output exactly in half." },
+  { text:"Which of the following is an example of reinforcement learning?", options:["Spam detection","AlphaGo playing Go","Customer segmentation","House price prediction"], correct:1, difficulty:"medium", points:15, hint:"RL agents learn by receiving rewards or penalties from an environment." }
+];
+const bonusQuestions = [
+  { text:"Which clustering validation metric ranges from -1 to +1?", options:["Davies-Bouldin","Inertia","Silhouette Score","Purity"], correct:2, difficulty:"hard", points:25, hint:"+1 = perfect cluster separation, 0 = overlapping, -1 = wrong cluster." },
+  { text:"The decision boundary in SVM is?", options:["Hyperplane separating classes","Clustering threshold","Regression line","Neural network layer"], correct:0, difficulty:"hard", points:25, hint:"SVM maximizes the margin between two classes in feature space." },
+  { text:"Which is NOT a proper method to handle outliers?", options:["IQR capping","Z-score removal","Mean imputation","Clustering based removal"], correct:2, difficulty:"medium", points:20, hint:"One of these options is a method for missing values, not outliers." },
+  { text:"In K-Means, what happens if K is too high?", options:["Underfitting","Over-segmentation, high variance","Better silhouette always","Centroids collapse"], correct:1, difficulty:"hard", points:25, hint:"Too many clusters = each cluster has very few, possibly single points." },
+  { text:"Which metric focuses on the positive class and balances precision/recall?", options:["F1-Score","Accuracy","R-squared","MAE"], correct:0, difficulty:"medium", points:20, hint:"It is the harmonic mean of Precision and Recall." }
+];
+
+// ══════════════════════════════════
+//  STATE
+// ══════════════════════════════════
+let currentQuestions=[], userAnswers=[], hintsUsed=[];
+let currentIndex=0, quizActive=false, timerInterval=null;
+let totalPoints=0, bonusUnlocked=false, quizFinished=false;
+let questionStartTime=0, remainingSeconds=1200, currentPlayer="", hintsCount=0;
+const HINT_COST = 5;
+
+const landingPage      = document.getElementById('landingPage');
+const quizContainer    = document.getElementById('quizContainer');
+const resultsDashboard = document.getElementById('resultsDashboard');
+const startBtn         = document.getElementById('startQuizBtn');
+const nextBtn          = document.getElementById('nextBtn');
+const prevBtn          = document.getElementById('prevBtn');
+const hintBtn          = document.getElementById('hintBtn');
+const hintBox          = document.getElementById('hintBox');
+const playerNameInput  = document.getElementById('playerNameInput');
+const nameError        = document.getElementById('nameError');
+const loadingOverlay   = document.getElementById('loadingOverlay');
+
+function startTimer(s) {
+  remainingSeconds = s;
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!quizActive) return;
+    remainingSeconds--;
+    const m = Math.floor(remainingSeconds/60), sec = remainingSeconds%60;
+    document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    if (remainingSeconds <= 60) document.getElementById('timerChip').classList.add('warning');
+    if (remainingSeconds <= 0)  { clearInterval(timerInterval); endQuiz(); }
+  }, 1000);
+}
+
+function triggerBonus() {
+  if (bonusUnlocked) return;
+  bonusUnlocked = true;
+  currentQuestions = [...coreQuestions, ...bonusQuestions];
+  userAnswers = userAnswers.concat(new Array(bonusQuestions.length).fill(null));
+  hintsUsed   = hintsUsed.concat(new Array(bonusQuestions.length).fill(false));
+  const b = document.getElementById('bonusBanner');
+  b.classList.remove('hidden');
+  document.getElementById('qTotal').textContent = `/${currentQuestions.length}`;
+  setTimeout(() => b.classList.add('hidden'), 4000);
+}
+
+function showToast(msg, type='score') {
+  const t = document.createElement('div');
+  t.className = type === 'hint' ? 'hint-toast' : 'multiplier-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+function renderQuestion() {
+  const q = currentQuestions[currentIndex], len = currentQuestions.length;
+  document.getElementById('currentQNum').textContent = currentIndex+1;
+  document.getElementById('qTotal').textContent = `/${len}`;
+  document.getElementById('quizProgress').style.width = `${((currentIndex+1)/len)*100}%`;
+  const db = document.getElementById('diffBadge');
+  db.textContent = q.difficulty.charAt(0).toUpperCase()+q.difficulty.slice(1);
+  db.className = `diff-badge diff-${q.difficulty}`;
+  document.getElementById('questionText').textContent = q.text;
+  hintBox.classList.add('hidden'); hintBox.innerHTML='';
+  const answered=userAnswers[currentIndex], hintDone=hintsUsed[currentIndex];
+  hintBtn.disabled = !!(answered || hintDone);
+  if (hintDone) { hintBox.innerHTML=`<strong>💡 Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden'); }
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML='';
+  q.options.forEach((opt,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn';
+    btn.innerHTML=`<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
+    if (answered) {
+      btn.classList.add('answered');
+      if (idx===q.correct) btn.classList.add('correct');
+      else if (idx===answered.selected) btn.classList.add('wrong');
     }
-  }
-
-  async function checkUserAttempt(name) {
-    const qSnapshot = await getDocs(collection(db, "leaderboard"));
-    let found = false;
-    qSnapshot.forEach((doc) => {
-      if (doc.data().name.toLowerCase() === name.toLowerCase()) found = true;
-    });
-    return found;
-  }
-
-  // ----------------------------- QUIZ DATA -----------------------------
-  const coreQuestions = [
-    { text: "What is the main difference between Traditional Programming and Machine Learning?", options: ["ML uses hardcoded rules", "ML learns patterns from data", "No difference", "ML requires more hardware"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "Which of the following is a supervised learning task?", options: ["Clustering", "Dimensionality Reduction", "Classification", "Association Rules"], correct: 2, difficulty: "easy", points: 10 },
-    { text: "Handling missing values by replacing with column mean is known as?", options: ["Drop", "Imputation", "Encoding", "Normalization"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "StandardScaler in sklearn does what?", options: ["Scales to [0,1]", "Centers to mean=0, variance=1", "Removes outliers", "Encodes categories"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "Which metric is best for imbalanced classification?", options: ["Accuracy", "Precision and Recall", "Mean Absolute Error", "R-squared"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "Logistic Regression outputs:", options: ["Probability between 0 and 1", "Linear value", "Class label only", "Distance"], correct: 0, difficulty: "easy", points: 10 },
-    { text: "What does K represent in K-Means clustering?", options: ["Number of features", "Number of clusters", "Number of iterations", "Distance metric"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "Silhouette Score measures:", options: ["Cluster density", "How similar a point is to its own cluster vs others", "Distance to centroid", "Accuracy of classification"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "Which of the following is an unsupervised learning algorithm?", options: ["Decision Tree", "Linear Regression", "K-Means", "Logistic Regression"], correct: 2, difficulty: "easy", points: 10 },
-    { text: "What is the purpose of feature scaling?", options: ["Prevents features with larger ranges from dominating", "Removes missing data", "Increases accuracy always", "Converts text to numbers"], correct: 0, difficulty: "easy", points: 10 },
-    { text: "In Decision Trees, splitting is based on:", options: ["P-value", "Information Gain / Gini Impurity", "Gradient Descent", "Euclidean Distance"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "Precision is defined as:", options: ["TP/(TP+FN)", "TP/(TP+FP)", "TN/(TN+FP)", "Accuracy/Recall"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "What is a centroid in K-Means?", options: ["The mean of all points in a cluster", "The farthest point", "The median point", "Randomly initialized boundary"], correct: 0, difficulty: "easy", points: 10 },
-    { text: "Which method helps find optimal K in K-Means?", options: ["Elbow Method", "Confusion Matrix", "ROC Curve", "Cross-Validation"], correct: 0, difficulty: "medium", points: 15 },
-    { text: "Which evaluation metric is used for regression problems?", options: ["Accuracy", "R-squared (R-squared)", "Precision", "Silhouette Score"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "What does a high Recall indicate?", options: ["Few false positives", "Few false negatives", "High overall accuracy", "Low precision"], correct: 1, difficulty: "medium", points: 15 },
-    { text: "In Linear Regression, feature selection helps:", options: ["Reduce overfitting and improve interpretability", "Increase training time", "Convert categorical data", "Normalize data"], correct: 0, difficulty: "easy", points: 10 },
-    { text: "Which library is primarily used for data manipulation in Python?", options: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "What is the threshold typically used in logistic regression for binary classification?", options: ["0.3", "0.5", "0.7", "1.0"], correct: 1, difficulty: "easy", points: 10 },
-    { text: "Which of the following is an example of reinforcement learning?", options: ["Spam detection", "AlphaGo playing Go", "Customer segmentation", "House price prediction"], correct: 1, difficulty: "medium", points: 15 }
-  ];
-  const bonusQuestions = [
-    { text: "Which clustering validation metric ranges from -1 to +1?", options: ["Davies-Bouldin", "Inertia", "Silhouette Score", "Purity"], correct: 2, difficulty: "hard", points: 25 },
-    { text: "The decision boundary in SVM is?", options: ["Hyperplane separating classes", "Clustering threshold", "Regression line", "Neural network layer"], correct: 0, difficulty: "hard", points: 25 },
-    { text: "Which is NOT a proper method to handle outliers?", options: ["IQR capping", "Z-score removal", "Mean imputation", "Clustering based removal"], correct: 2, difficulty: "medium", points: 20 },
-    { text: "In K-Means, what happens if K is too high?", options: ["Underfitting", "Over-segmentation, high variance", "Better silhouette always", "Centroids collapse"], correct: 1, difficulty: "hard", points: 25 },
-    { text: "Which metric focuses on the positive class and balances precision/recall?", options: ["F1-Score", "Accuracy", "R-squared", "MAE"], correct: 0, difficulty: "medium", points: 20 }
-  ];
-
-  let currentQuestions = [...coreQuestions];
-  let userAnswers = [];
-  let currentIndex = 0;
-  let quizActive = false;
-  let timerInterval = null;
-  let totalPoints = 0;
-  let bonusUnlocked = false;
-  let quizFinished = false;
-  let questionStartTime = 0;
-  let remainingSeconds = 1200;
-  let currentPlayer = "";
-  let hasAttempted = false;
-
-  const landingPage = document.getElementById('landingPage');
-  const quizContainer = document.getElementById('quizContainer');
-  const resultsDashboard = document.getElementById('resultsDashboard');
-  const startBtn = document.getElementById('startQuizBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const playerNameInput = document.getElementById('playerNameInput');
-  const nameError = document.getElementById('nameError');
-  const toggleLeaderboardBtn = document.getElementById('toggleLeaderboardBtn');
-  const leaderboardPreview = document.getElementById('leaderboardPreview');
-  const previewBody = document.getElementById('previewLeaderboardBody');
-
-  function renderLeaderboardTables() {
-    const renderTo = (tbody, isPreview = false) => {
-      tbody.innerHTML = '';
-      if (!globalScores.length) {
-        tbody.innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;">No scores yet</td></tr>';
-        return;
+    btn.onclick=()=>{
+      if (!quizActive||answered) return;
+      const isCorrect=idx===q.correct, ts=(Date.now()-questionStartTime)/1000;
+      let mult=1.0;
+      if (isCorrect) {
+        if (ts<=3) mult=1.5; else if (ts<=6) mult=1.3; else if (ts<=10) mult=1.1;
+        const earned=Math.floor(q.points*mult);
+        totalPoints+=earned;
+        document.getElementById('liveScore').textContent=totalPoints;
+        if (mult>1) showToast(`${mult}× Speed Bonus! +${earned} pts`);
       }
-      globalScores.slice(0, isPreview ? 10 : 100).forEach((s, i) => {
-        const row = `<tr${s.name === currentPlayer && !isPreview ? ' class="me"' : ''}>
-          <td class="lb-rank ${i < 3 ? 'top' : ''}">${i+1}</td>
-          <td>${s.name}</td><td class="lb-score">${s.score}</td><td class="lb-time">${s.time || '--'}</td>
-        </tr>`;
-        tbody.insertAdjacentHTML('beforeend', row);
-      });
+      userAnswers[currentIndex]={selected:idx,isCorrect};
+      btn.classList.add(isCorrect?'correct':'wrong');
+      if (!isCorrect) container.children[q.correct].classList.add('correct');
+      hintBtn.disabled=true;
+      if (!bonusUnlocked&&currentIndex===19&&remainingSeconds>=600) setTimeout(()=>triggerBonus(),300);
+      setTimeout(()=>{ if (currentIndex+1<currentQuestions.length){currentIndex++;renderQuestion();}else endQuiz(); },800);
     };
-    renderTo(document.getElementById('leaderboardBody'), false);
-    renderTo(previewBody, true);
-  }
+    container.appendChild(btn);
+  });
+  prevBtn.disabled = currentIndex===0;
+  questionStartTime = Date.now();
+}
 
-  function startTimer(seconds) {
-    remainingSeconds = seconds;
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      if (!quizActive) return;
-      remainingSeconds--;
-      const m = Math.floor(remainingSeconds / 60);
-      const s = remainingSeconds % 60;
-      document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      if (remainingSeconds <= 60) document.getElementById('timerChip').classList.add('warning');
-      if (remainingSeconds <= 0) { clearInterval(timerInterval); endQuiz(); }
-    }, 1000);
-  }
+hintBtn.onclick=()=>{
+  const q=currentQuestions[currentIndex];
+  if (hintsUsed[currentIndex]||userAnswers[currentIndex]||!quizActive) return;
+  hintsUsed[currentIndex]=true; hintsCount++;
+  totalPoints=Math.max(0,totalPoints-HINT_COST);
+  document.getElementById('liveScore').textContent=totalPoints;
+  showToast(`💡 Hint used  −${HINT_COST} pts`,'hint');
+  hintBox.innerHTML=`<strong>💡 Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden');
+  hintBtn.disabled=true;
+};
 
-  function triggerBonus() {
-    if (bonusUnlocked) return;
-    bonusUnlocked = true;
-    currentQuestions = [...coreQuestions, ...bonusQuestions];
-    userAnswers = userAnswers.concat(new Array(bonusQuestions.length).fill(null));
-    const banner = document.getElementById('bonusBanner');
-    banner.classList.remove('hidden');
-    setTimeout(() => banner.classList.add('hidden'), 4000);
-    document.getElementById('currentQNum').nextSibling.textContent = `/${currentQuestions.length}`;
-  }
+async function endQuiz() {
+  if (quizFinished) return;
+  quizFinished=true; quizActive=false; clearInterval(timerInterval);
+  const totalLen=currentQuestions.length;
+  const correct=userAnswers.filter(a=>a&&a.isCorrect).length;
+  const timeUsed=1200-remainingSeconds;
+  const timeStr=`${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
+  // Populate completion screen
+  document.getElementById('completeName').textContent   = `Well done, ${currentPlayer}!`;
+  document.getElementById('finalScoreSpan').textContent = totalPoints;
+  document.getElementById('finalTimeSpan').textContent  = timeStr;
+  document.getElementById('accuracySpan').textContent   = ((correct/totalLen)*100).toFixed(1);
+  document.getElementById('hintsUsedSpan').textContent  = hintsCount;
+  if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
+  quizContainer.classList.add('hidden');
+  resultsDashboard.classList.remove('hidden');
+  // Save silently in background
+  loadingOverlay.querySelector('.loading-text').textContent='Saving your score...';
+  loadingOverlay.classList.remove('hidden');
+  try {
+    await saveScore({ name:currentPlayer, score:totalPoints, time:timeStr,
+      hintsUsed:hintsCount, bonusCompleted:bonusUnlocked,
+      accuracy:parseFloat(((correct/totalLen)*100).toFixed(1)), timestamp:Date.now() });
+  } catch(e) { console.error("Save failed:",e); }
+  loadingOverlay.classList.add('hidden');
+}
 
-  function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.className = 'multiplier-toast';
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2200);
-  }
+async function startQuiz() {
+  const name=playerNameInput.value.trim();
+  if (!name) { nameError.textContent="⚠ Please enter your name to start"; nameError.classList.remove('hidden'); return; }
+  nameError.classList.add('hidden');
+  if (checkUserAttempt(name)) { nameError.textContent="⚠ You've already taken the quiz! One attempt per user."; nameError.classList.remove('hidden'); return; }
+  currentPlayer=name; currentQuestions=[...coreQuestions];
+  userAnswers=new Array(20).fill(null); hintsUsed=new Array(20).fill(false);
+  hintsCount=0; currentIndex=0; totalPoints=0; bonusUnlocked=false; quizFinished=false;
+  document.getElementById('liveScore').textContent='0';
+  document.getElementById('bonusBadge').classList.add('hidden');
+  document.getElementById('timerDisplay').textContent='20:00';
+  document.getElementById('timerChip').classList.remove('warning');
+  document.getElementById('qTotal').textContent='/20';
+  landingPage.classList.add('hidden'); resultsDashboard.classList.add('hidden');
+  quizContainer.classList.remove('hidden');
+  renderQuestion(); quizActive=true; startTimer(1200);
+}
 
-  function renderQuestion() {
-    const q = currentQuestions[currentIndex];
-    const totalLen = currentQuestions.length;
-    document.getElementById('currentQNum').textContent = `${currentIndex+1}`;
-    document.getElementById('currentQNum').nextSibling.textContent = `/${totalLen}`;
-    document.getElementById('quizProgress').style.width = `${((currentIndex+1)/totalLen)*100}%`;
-    const diffBadge = document.getElementById('diffBadge');
-    diffBadge.textContent = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
-    diffBadge.className = `diff-badge diff-${q.difficulty}`;
-    document.getElementById('questionText').textContent = q.text;
-    const container = document.getElementById('optionsContainer');
-    container.innerHTML = '';
-    const saved = userAnswers[currentIndex];
-    q.options.forEach((opt, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'opt-btn';
-      btn.innerHTML = `<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
-      if (saved) {
-        btn.classList.add('answered');
-        if (idx === q.correct) btn.classList.add('correct');
-        else if (idx === saved.selected) btn.classList.add('wrong');
-      }
-      btn.onclick = () => {
-        if (!quizActive || saved) return;
-        const isCorrect = idx === q.correct;
-        const timeSpent = (Date.now() - questionStartTime)/1000;
-        let mult = 1.0;
-        if (isCorrect) {
-          if (timeSpent <= 3) mult = 1.5;
-          else if (timeSpent <= 6) mult = 1.3;
-          else if (timeSpent <= 10) mult = 1.1;
-          const earned = Math.floor(q.points * mult);
-          totalPoints += earned;
-          document.getElementById('liveScore').textContent = totalPoints;
-          if (mult > 1) showToast(`${mult}x Speed Bonus! +${earned} pts`);
-        }
-        userAnswers[currentIndex] = { selected: idx, isCorrect };
-        btn.classList.add(isCorrect ? 'correct' : 'wrong');
-        if (!isCorrect) container.children[q.correct].classList.add('correct');
-        if (!bonusUnlocked && currentIndex === 19 && remainingSeconds >= 600) setTimeout(() => triggerBonus(), 300);
-        setTimeout(() => {
-          if (currentIndex+1 < currentQuestions.length) { currentIndex++; renderQuestion(); }
-          else endQuiz();
-        }, 800);
-      };
-      container.appendChild(btn);
+startBtn.onclick=startQuiz;
+nextBtn.onclick=()=>{ if (quizActive&&currentIndex+1<currentQuestions.length&&userAnswers[currentIndex]){currentIndex++;renderQuestion();} };
+prevBtn.onclick=()=>{ if (quizActive&&currentIndex>0){currentIndex--;renderQuestion();} };
+
+(async()=>{
+  try { await loadScores(); } catch(e) { console.warn("Load scores:",e); }
+  loadingOverlay.classList.add('hidden');
+  landingPage.classList.remove('hidden');
+})();
+
+// ══════════════════════════════════
+//  AI NEURAL NETWORK ANIMATION
+// ══════════════════════════════════
+(function(){
+  const canvas=document.getElementById('neuralCanvas'), ctx=canvas.getContext('2d');
+  let W,H,nodes,pulses;
+  const NC=38,MD=160,PS=1.8,LABELS=["CNN","RNN","SVM","k-NN","SGD","GAN","MLP","LLM","GPT","RL"];
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  function rand(a,b){ return a+Math.random()*(b-a); }
+  function initNodes(){
+    nodes=Array.from({length:NC},()=>({x:Math.random()*W,y:Math.random()*H,vx:rand(-0.25,0.25),vy:rand(-0.25,0.25),r:rand(2.5,5.5),activated:false,activationTimer:0}));
+    pulses=[];
+  }
+  const lbls=Array.from({length:8},()=>({text:LABELS[Math.floor(Math.random()*LABELS.length)],x:Math.random()*1200,y:Math.random()*800,vy:rand(-0.15,-0.05),alpha:rand(0.04,0.09)}));
+  function spawnPulse(){
+    if (Math.random()>0.015) return;
+    const from=nodes[Math.floor(Math.random()*nodes.length)];
+    const cands=nodes.filter(n=>Math.hypot(n.x-from.x,n.y-from.y)<MD&&n!==from);
+    if (!cands.length) return;
+    const to=cands[Math.floor(Math.random()*cands.length)];
+    pulses.push({from,to,t:0}); from.activated=true; from.activationTimer=18;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      if (n.x<0||n.x>W) n.vx*=-1; if (n.y<0||n.y>H) n.vy*=-1;
+      if (n.activationTimer>0) n.activationTimer--; else n.activated=false;
     });
-    prevBtn.disabled = currentIndex === 0;
-    questionStartTime = Date.now();
-  }
-
-  async function endQuiz() {
-    if (quizFinished) return;
-    quizFinished = true;
-    quizActive = false;
-    clearInterval(timerInterval);
-    const totalLen = currentQuestions.length;
-    const correct = userAnswers.filter(a => a && a.isCorrect).length;
-    const timeUsed = 1200 - remainingSeconds;
-    const timeStr = `${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
-    document.getElementById('finalScoreSpan').textContent = totalPoints;
-    document.getElementById('finalTimeSpan').textContent = timeStr;
-    document.getElementById('accuracySpan').textContent = ((correct/totalLen)*100).toFixed(1);
-    if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
-    
-    // Save to Firebase Cloud Database
-    const entry = { name: currentPlayer, score: totalPoints, time: timeStr, timestamp: Date.now() };
-    await saveScore(entry);
-    
-    quizContainer.classList.add('hidden');
-    resultsDashboard.classList.remove('hidden');
-  }
-
-  async function startQuiz() {
-    const name = playerNameInput.value.trim();
-    if (!name) { 
-      nameError.textContent = "Please enter your name to start";
-      nameError.classList.remove('hidden'); 
-      return; 
+    for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++){
+      const d=Math.hypot(nodes[j].x-nodes[i].x,nodes[j].y-nodes[i].y);
+      if (d<MD){ ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=`rgba(232,41,76,${(1-d/MD)*0.12})`; ctx.lineWidth=0.8; ctx.stroke(); }
     }
-    nameError.classList.add('hidden');
-    
-    // Check cloud database for previous attempts
-    startBtn.disabled = true;
-    startBtn.textContent = "Checking Server...";
-    
-    const hasPlayed = await checkUserAttempt(name);
-    if (hasPlayed) {
-      nameError.textContent = "You have already taken the quiz! One attempt per user.";
-      nameError.classList.remove('hidden');
-      startBtn.disabled = false;
-      startBtn.textContent = "Start Exam";
-      return;
-    }
-    
-    currentPlayer = name;
-    hasAttempted = true;
-    currentQuestions = [...coreQuestions];
-    userAnswers = new Array(20).fill(null);
-    currentIndex = 0;
-    totalPoints = 0;
-    bonusUnlocked = false;
-    quizFinished = false;
-    document.getElementById('liveScore').textContent = '0';
-    document.getElementById('bonusBadge').classList.add('hidden');
-    document.getElementById('timerDisplay').textContent = '20:00';
-    document.getElementById('timerChip').classList.remove('warning');
-    
-    startBtn.disabled = false;
-    startBtn.textContent = "Start Exam";
-    
-    landingPage.classList.add('hidden');
-    resultsDashboard.classList.add('hidden');
-    quizContainer.classList.remove('hidden');
-    renderQuestion();
-    quizActive = true;
-    startTimer(1200);
+    spawnPulse(); pulses=pulses.filter(p=>p.t<=1);
+    pulses.forEach(p=>{
+      p.t+=PS/Math.hypot(p.to.x-p.from.x,p.to.y-p.from.y);
+      const px=p.from.x+(p.to.x-p.from.x)*p.t, py=p.from.y+(p.to.y-p.from.y)*p.t;
+      const g=ctx.createRadialGradient(px,py,0,px,py,10);
+      g.addColorStop(0,'rgba(232,41,76,0.55)'); g.addColorStop(1,'rgba(232,41,76,0)');
+      ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fillStyle='rgba(232,41,76,0.9)'; ctx.fill();
+      if (p.t>=1){ p.to.activated=true; p.to.activationTimer=14; }
+    });
+    nodes.forEach(n=>{
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
+      g.addColorStop(0,n.activated?'rgba(232,41,76,0.7)':'rgba(232,41,76,0.25)'); g.addColorStop(1,'rgba(232,41,76,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fillStyle=n.activated?'rgba(232,41,76,0.85)':'rgba(232,41,76,0.35)'; ctx.fill();
+    });
+    lbls.forEach(l=>{
+      l.y+=l.vy; if (l.y<-20){l.y=H+20;l.x=Math.random()*W;l.text=LABELS[Math.floor(Math.random()*LABELS.length)];}
+      ctx.font='700 11px "Space Mono",monospace'; ctx.fillStyle=`rgba(232,41,76,${l.alpha})`; ctx.fillText(l.text,l.x,l.y);
+    });
+    requestAnimationFrame(draw);
   }
-
-  startBtn.onclick = startQuiz;
-  nextBtn.onclick = () => { if (quizActive && currentIndex+1 < currentQuestions.length && userAnswers[currentIndex]) { currentIndex++; renderQuestion(); } };
-  prevBtn.onclick = () => { if (quizActive && currentIndex > 0) { currentIndex--; renderQuestion(); } };
-  toggleLeaderboardBtn.onclick = () => { leaderboardPreview.classList.toggle('hidden'); renderLeaderboardTables(); };
+  window.addEventListener('resize',()=>{resize();initNodes()});
+  resize(); initNodes(); draw();
+})();
 </script>
 </body>
 </html>
