@@ -14,9 +14,14 @@
     --dark: #F4F6F8;
     --card: #FFFFFF;
     --card2: #F9FAFB;
-    --border: rgba(232, 41, 76, 0.15);
+    --border: rgba(232,41,76,0.15);
     --text: #1A0A0E;
     --muted: #6B7280;
+    --code-bg: #1E1A2E;
+    --code-text: #E2D9F3;
+    --code-accent: #A78BFA;
+    --code-green: #6EE7B7;
+    --code-yellow: #FDE68A;
     --mono: 'Space Mono', monospace;
     --sans: 'Outfit', sans-serif;
   }
@@ -38,28 +43,24 @@
     padding: 32px 24px;
   }
 
-  /* Header */
   .logo-header {
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
-    margin-bottom: 24px; animation: fadeDown 0.6s ease both; width: 100%; max-width: 400px;
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    margin-bottom: 28px; animation: fadeDown 0.6s ease both; width: 100%; max-width: 420px;
   }
-  .gdg-label {
-    font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--red); opacity: 0.9; text-align: center;
-  }
+  .logo-header img { width: 180px; height: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(232,41,76,0.15)); }
 
-  /* Card */
   .card {
     background: var(--card); border: 1px solid var(--border); border-radius: 28px;
     box-shadow: 0 20px 40px -10px rgba(232,41,76,0.08), 0 4px 12px rgba(0,0,0,0.02);
-    width: 100%; max-width: 780px;
+    width: 100%; max-width: 820px;
   }
   .card-inner { padding: 36px 40px; }
   @media (max-width: 640px) { .card-inner { padding: 28px 20px; } }
 
   /* Landing */
+  .landing-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); margin-bottom: 10px; }
   .landing-title {
-    font-size: clamp(32px,7vw,64px); font-weight: 900; line-height: 1.05;
+    font-size: clamp(28px,6vw,54px); font-weight: 900; line-height: 1.05;
     background: linear-gradient(135deg, var(--text) 30%, var(--red) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     margin-bottom: 12px;
@@ -80,11 +81,12 @@
   .error-msg { color: var(--red); font-size: 13px; margin-top: 8px; display: flex; align-items: center; gap: 6px; }
 
   .badge {
-    display: inline-block; background: rgba(232,41,76,0.1); border: 1px solid rgba(232,41,76,0.2);
-    color: var(--red); font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 10px; letter-spacing: 0.08em;
+    display: inline-block; background: rgba(232,41,76,0.08); border: 1px solid rgba(232,41,76,0.2);
+    color: var(--red); font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 10px; letter-spacing: 0.06em;
   }
-  .landing-meta { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 8px; }
-  .landing-meta p { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+  .badge.code-badge { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3); color: #7C3AED; }
+  .landing-meta { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px; }
+  .landing-meta p { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; margin: 7px 0; }
 
   /* Buttons */
   .btn-primary {
@@ -101,7 +103,7 @@
   .btn-ghost {
     background: rgba(232,41,76,0.05); border: 1px solid var(--border); color: var(--red);
     font-weight: 600; font-size: 14px; padding: 10px 22px; border-radius: 100px;
-    cursor: pointer; transition: all 0.15s;
+    cursor: pointer; transition: all 0.15s; font-family: var(--sans);
   }
   .btn-ghost:hover:not(:disabled) { background: rgba(232,41,76,0.1); border-color: rgba(232,41,76,0.3); }
   .btn-ghost:disabled { opacity: 0.3; cursor: default; }
@@ -114,11 +116,11 @@
   }
   .btn-hint:hover:not(:disabled) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
   .btn-hint:disabled { opacity: 0.35; cursor: default; }
-  .btn-hint .hint-cost { font-family: var(--mono); font-size: 11px; opacity: 0.8; }
+  .hint-cost { font-family: var(--mono); font-size: 11px; opacity: 0.8; }
 
   /* Hint box */
   .hint-box {
-    margin: 0 32px 16px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25);
+    margin: 0 32px 16px; background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2);
     border-radius: 14px; padding: 14px 18px; font-size: 14px; color: #92400E; line-height: 1.5;
     animation: fadeUp 0.3s ease;
   }
@@ -129,44 +131,93 @@
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
     padding: 20px 32px 16px; border-bottom: 1px solid var(--border);
   }
-  .q-chip, .score-chip, .timer-chip {
-    font-family: var(--mono); font-size: 13px; background: rgba(232,41,76,0.05);
+  .q-chip, .score-chip, .timer-chip, .type-chip {
+    font-family: var(--mono); font-size: 12px; background: rgba(232,41,76,0.05);
     border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 10px;
     display: flex; align-items: center; gap: 6px; font-weight: 600;
   }
   .score-chip, .timer-chip { background: var(--card2); }
+  .type-chip.code { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); color: #7C3AED; }
   .timer-chip.warning { color: var(--red); border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.05); animation: pulseWarning 1s infinite; }
   @keyframes pulseWarning { 0%,100% { box-shadow: 0 0 0 0 rgba(232,41,76,0); } 50% { box-shadow: 0 0 0 4px rgba(232,41,76,0.15); } }
 
   /* Progress */
-  .progress-wrap { padding: 16px 32px 0; }
-  .progress-track { background: rgba(0,0,0,0.05); border-radius: 100px; height: 6px; }
-  .progress-fill { background: linear-gradient(90deg, var(--red), var(--pink)); height: 6px; border-radius: 100px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+  .progress-wrap { padding: 14px 32px 0; }
+  .progress-track { background: rgba(0,0,0,0.05); border-radius: 100px; height: 5px; }
+  .progress-fill { background: linear-gradient(90deg, var(--red), var(--pink)); height: 5px; border-radius: 100px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
 
-  /* Question */
-  .question-area { padding: 24px 32px 0; }
-  .diff-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 16px; }
-  .diff-easy   { background: rgba(72,199,142,0.1); color: #2E8B57; border: 1px solid rgba(72,199,142,0.3); }
-  .diff-medium { background: rgba(245,158,11,0.1); color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
-  .diff-hard   { background: rgba(232,41,76,0.1);  color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
-  #questionText { font-size: clamp(18px,3vw,24px); font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 24px; }
+  /* Question area */
+  .question-area { padding: 20px 32px 0; }
+  .diff-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; }
+  .diff-easy   { background: rgba(72,199,142,0.1);  color: #2E8B57; border: 1px solid rgba(72,199,142,0.3); }
+  .diff-medium { background: rgba(245,158,11,0.1);  color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
+  .diff-hard   { background: rgba(232,41,76,0.1);   color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
+
+  #questionText { font-size: clamp(16px,2.8vw,21px); font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 16px; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(167,139,250,0.2);
+    position: relative;
+    overflow-x: auto;
+  }
+  .code-block pre {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--code-text);
+    white-space: pre;
+  }
+  .code-block .c-kw  { color: #C084FC; }   /* keyword: import, from, for, if */
+  .code-block .c-fn  { color: #67E8F9; }   /* function names */
+  .code-block .c-str { color: var(--code-green); }  /* strings */
+  .code-block .c-num { color: var(--code-yellow); } /* numbers */
+  .code-block .c-cmt { color: #64748B; font-style: italic; } /* comments */
+  .code-block .c-var { color: #FCA5A5; }   /* variables/objects */
+  .code-block .c-blank {
+    display: inline-block;
+    background: rgba(232,41,76,0.25);
+    border: 2px dashed var(--red);
+    border-radius: 6px;
+    padding: 1px 14px;
+    color: rgba(232,41,76,0.8);
+    font-weight: 700;
+    min-width: 80px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .code-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(167,139,250,0.7); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+  }
+  .code-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(167,139,250,0.5); }
 
   /* Options */
-  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 32px 16px; }
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 32px 16px; }
   @media (max-width: 640px) {
     .options-grid { grid-template-columns: 1fr; padding: 0 20px 16px; }
     .quiz-topbar, .progress-wrap, .question-area { padding-left: 20px; padding-right: 20px; }
     .hint-box { margin: 0 20px 12px; }
     .quiz-footer { padding: 0 20px 24px; }
+    .code-block { font-size: 11px; }
   }
+
   .opt-btn {
     text-align: left; background: var(--card2); border: 1px solid var(--border); border-radius: 14px;
-    color: var(--text); font-size: 15px; font-weight: 500; padding: 14px 16px; cursor: pointer;
-    transition: all 0.15s; display: flex; align-items: center; gap: 12px;
+    color: var(--text); font-size: 14px; font-weight: 500; padding: 12px 16px; cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 12px; font-family: var(--sans);
   }
+  .opt-btn.code-opt { font-family: var(--mono); font-size: 13px; background: #F8F6FF; border-color: rgba(124,58,237,0.12); }
   .opt-btn:hover:not(.answered) { border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.03); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,41,76,0.05); }
+  .opt-btn.code-opt:hover:not(.answered) { border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.05); }
   .opt-label {
-    width: 28px; height: 28px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
+    width: 28px; height: 28px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06);
     display: flex; align-items: center; justify-content: center; font-family: var(--mono);
     font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0;
   }
@@ -180,74 +231,55 @@
   .quiz-footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 32px 28px; gap: 12px; }
   .footer-left { display: flex; gap: 10px; align-items: center; }
 
-  /* ════ COMPLETION SCREEN ════ */
-  .complete-wrap { padding: 48px 40px 44px; text-align: center; }
-  @media (max-width: 640px) { .complete-wrap { padding: 36px 24px 36px; } }
-
-  .complete-emoji {
-    font-size: 72px; display: block; margin-bottom: 20px;
-    animation: popIn 0.55s cubic-bezier(.175,.885,.32,1.275) both;
-  }
-  @keyframes popIn { from { opacity:0; transform:scale(0.4); } to { opacity:1; transform:scale(1); } }
-
-  .complete-eyebrow {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--red); margin-bottom: 8px;
-  }
-  .complete-name {
-    font-size: clamp(18px,4vw,26px); font-weight: 900; color: var(--text);
-    margin-bottom: 32px; line-height: 1.25;
+  /* Bonus banner */
+  .bonus-banner {
+    background: rgba(232,41,76,0.05); border-top: 1px solid rgba(232,41,76,0.15);
+    border-bottom: 1px solid rgba(232,41,76,0.15); color: var(--red);
+    text-align: center; font-weight: 700; font-size: 13px; letter-spacing: 0.04em;
+    padding: 12px; margin: 10px 32px 0; border-radius: 8px;
   }
 
+  /* Completion screen */
+  .complete-wrap { padding: 44px 40px 40px; text-align: center; }
+  @media (max-width: 640px) { .complete-wrap { padding: 32px 20px 32px; } }
+  .complete-logo { width: 100px; height: auto; margin-bottom: 20px; opacity: 0.9; }
+  .complete-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+  .complete-name { font-size: clamp(18px,4vw,26px); font-weight: 900; color: var(--text); margin-bottom: 28px; }
   .score-ring {
     display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
     width: 180px; height: 180px; border-radius: 50%;
     border: 3px solid rgba(232,41,76,0.12);
     background: radial-gradient(circle at 50% 40%, rgba(232,41,76,0.06) 0%, transparent 70%);
-    margin-bottom: 32px;
-    animation: fadeUp 0.5s ease 0.25s both;
+    margin-bottom: 28px; animation: fadeUp 0.5s ease 0.2s both;
   }
   .score-ring .sr-num {
     font-family: var(--mono); font-size: clamp(42px,10vw,60px); font-weight: 700; line-height: 1;
     background: linear-gradient(135deg, var(--red), var(--pink));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .score-ring .sr-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--muted); margin-top: 4px;
-  }
-
-  .stats-strip {
-    display: flex; gap: 0; border: 1px solid var(--border); border-radius: 18px;
-    overflow: hidden; margin-bottom: 24px;
-  }
-  .stat-cell { flex: 1; padding: 16px 12px; border-right: 1px solid var(--border); }
+  .score-ring .sr-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+  .stats-strip { display: flex; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; margin-bottom: 20px; }
+  .stat-cell { flex: 1; padding: 14px 12px; border-right: 1px solid var(--border); }
   .stat-cell:last-child { border-right: none; }
-  .stat-cell .sc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-  .stat-cell .sc-val   { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text); }
-
+  .stat-cell .sc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .stat-cell .sc-val { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); }
   .bonus-badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(232,41,76,0.05); border: 1px solid rgba(232,41,76,0.2);
     color: var(--red); font-size: 13px; font-weight: 700;
-    padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
+    padding: 8px 18px; border-radius: 100px; margin-bottom: 20px;
   }
-
-  .complete-note {
-    background: rgba(232,41,76,0.03); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 20px;
-    font-size: 14px; color: var(--muted); line-height: 1.65;
-  }
+  .complete-note { background: rgba(232,41,76,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; font-size: 14px; color: var(--muted); line-height: 1.65; }
   .complete-note strong { color: var(--text); }
 
   /* Toasts */
-  .multiplier-toast {
+  .speed-toast {
     position: fixed; top: 20px; right: 20px;
     background: linear-gradient(135deg, var(--red), var(--pink));
     color: #fff; font-family: var(--mono); font-weight: 700;
     padding: 10px 20px; border-radius: 12px; z-index: 200;
     box-shadow: 0 8px 24px rgba(232,41,76,0.3);
-    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards;
+    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards; font-size: 13px;
   }
   .hint-toast {
     position: fixed; top: 20px; right: 20px;
@@ -255,17 +287,10 @@
     color: #fff; font-family: var(--mono); font-weight: 700;
     padding: 10px 20px; border-radius: 12px; z-index: 200;
     box-shadow: 0 8px 24px rgba(217,119,6,0.3);
-    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards;
+    animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards; font-size: 13px;
   }
   @keyframes toastIn  { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:none; } }
   @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateX(40px); } }
-
-  .bonus-banner {
-    background: rgba(232,41,76,0.05); border-top: 1px solid rgba(232,41,76,0.15);
-    border-bottom: 1px solid rgba(232,41,76,0.15); color: var(--red);
-    text-align: center; font-weight: 700; font-size: 13px;
-    padding: 12px; margin: 12px 32px 0; border-radius: 8px;
-  }
 
   /* Loading */
   .loading-overlay {
@@ -273,16 +298,13 @@
     background: rgba(244,246,248,0.9); backdrop-filter: blur(4px);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
   }
-  .loading-spinner {
-    width: 40px; height: 40px; border: 3px solid rgba(232,41,76,0.15);
-    border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite;
-  }
+  .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(232,41,76,0.15); border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-family: var(--mono); font-size: 14px; color: var(--muted); }
+  .loading-text { font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: 0.06em; }
 
   .hidden { display: none !important; }
   @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
 </style>
 </head>
 <body>
@@ -298,33 +320,33 @@
 <div id="app">
 
   <div class="logo-header">
-    <div style="font-size:44px;">🧠</div>
-    <div class="gdg-label">GDG · Al-Hussein Technical University</div>
+    <img src="image.png" alt="Google Developers Group — Al-Hussein Technical University">
   </div>
 
   <!-- ════ LANDING ════ -->
   <div id="landingPage" class="card hidden">
     <div class="card-inner">
-      <p style="font-size:12px;font-weight:700;letter-spacing:0.2em;color:var(--red);margin-bottom:12px;">ML MASTERY CHALLENGE</p>
+      <p class="landing-eyebrow">ML Mastery Challenge</p>
       <h1 class="landing-title">TEST YOUR<br>ML KNOWLEDGE</h1>
-      <p class="landing-sub">Supervised learning · Clustering · Evaluation metrics · Speed bonus</p>
+      <p class="landing-sub">Theory · Data Preprocessing · Classification · Clustering · Python Code</p>
 
       <div class="name-form">
         <input type="text" id="playerNameInput" class="name-input"
-               placeholder="Enter your name (required)" maxlength="30" autocomplete="off">
-        <div id="nameError" class="error-msg hidden">⚠ Please enter your name to start</div>
+               placeholder="Enter your full name (required)" maxlength="40" autocomplete="off">
+        <div id="nameError" class="error-msg hidden">Please enter your name to start</div>
         <div style="font-size:12px;color:var(--muted);margin-top:10px;">
-          One attempt per user · Results will be announced by the organizers.
+          One attempt per participant · Results will be announced by the organizers.
         </div>
       </div>
 
-      <button id="startQuizBtn" class="btn-primary">🚀 Start Exam</button>
+      <button id="startQuizBtn" class="btn-primary">Start Exam</button>
 
       <div class="landing-meta">
-        <p><span class="badge">20 Core Qs</span> + Bonus round if fast</p>
-        <p><span class="badge">20 Minutes</span> Speed = multiplier up to 1.5×</p>
-        <p><span class="badge">Under 10 min</span> unlocks 5 hard bonus questions</p>
-        <p><span class="badge">💡 Hints</span> available · costs <strong>5 pts</strong> each</p>
+        <p><span class="badge">25 Questions</span> theory + coding — plus bonus round if fast</p>
+        <p><span class="badge code-badge">Python Code</span> complete-the-code questions from your labs</p>
+        <p><span class="badge">45 Minutes</span> speed multiplier up to 1.5x</p>
+        <p><span class="badge">Under 20 min</span> unlocks 5 hard bonus questions</p>
+        <p><span class="badge">Hints</span> available at a cost of 5 points each</p>
       </div>
     </div>
   </div>
@@ -332,22 +354,27 @@
   <!-- ════ QUIZ ════ -->
   <div id="quizContainer" class="card hidden">
     <div class="quiz-topbar">
-      <div style="display:flex;gap:10px;">
-        <div class="q-chip">Q <span id="currentQNum">1</span><span id="qTotal" style="color:var(--muted);">/20</span></div>
-        <div class="score-chip">⭐ <span id="liveScore">0</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="q-chip">Q <span id="currentQNum">1</span><span id="qTotal" style="color:var(--muted);">/25</span></div>
+        <div class="score-chip">Score: <span id="liveScore">0</span></div>
+        <div class="type-chip" id="typeChip">Theory</div>
       </div>
-      <div class="timer-chip" id="timerChip">⏱ <span id="timerDisplay">20:00</span></div>
+      <div class="timer-chip" id="timerChip">Time: <span id="timerDisplay">45:00</span></div>
     </div>
 
     <div class="progress-wrap">
       <div class="progress-track"><div id="quizProgress" class="progress-fill" style="width:0%"></div></div>
     </div>
 
-    <div id="bonusBanner" class="bonus-banner hidden">🔥 BONUS ROUND UNLOCKED — 5 Hard Questions Added!</div>
+    <div id="bonusBanner" class="bonus-banner hidden">BONUS ROUND UNLOCKED — 5 Hard Questions Added</div>
 
     <div class="question-area">
       <div id="diffBadge" class="diff-badge diff-easy">Easy</div>
       <div id="questionText">Loading...</div>
+      <div id="codeBlock" class="code-block hidden">
+        <div class="code-label"><span class="code-dot"></span> Python Code — what goes in the blank?</div>
+        <pre id="codeContent"></pre>
+      </div>
     </div>
 
     <div class="options-grid" id="optionsContainer"></div>
@@ -355,45 +382,32 @@
 
     <div class="quiz-footer">
       <div class="footer-left">
-        <button id="prevBtn" class="btn-ghost" disabled>← Prev</button>
-        <button id="hintBtn" class="btn-hint">💡 Hint <span class="hint-cost">(-5 pts)</span></button>
+        <button id="prevBtn" class="btn-ghost" disabled>Prev</button>
+        <button id="hintBtn" class="btn-hint">Hint <span class="hint-cost">(-5 pts)</span></button>
       </div>
-      <button id="nextBtn" class="btn-primary" style="width:auto;padding:12px 28px;">Next →</button>
+      <button id="nextBtn" class="btn-primary" style="width:auto;padding:12px 28px;">Next</button>
     </div>
   </div>
 
-  <!-- ════ COMPLETION — personal score only, zero leaderboard ════ -->
+  <!-- ════ COMPLETION ════ -->
   <div id="resultsDashboard" class="card hidden">
     <div class="complete-wrap">
-      <span class="complete-emoji">🎉</span>
+      <img src="image.png" alt="GDG ATU" class="complete-logo">
       <div class="complete-eyebrow">Exam Complete</div>
       <div class="complete-name" id="completeName">Well done!</div>
-
       <div class="score-ring">
         <span class="sr-num" id="finalScoreSpan">0</span>
         <span class="sr-label">points</span>
       </div>
-
       <div class="stats-strip">
-        <div class="stat-cell">
-          <div class="sc-label">Time Used</div>
-          <div class="sc-val" id="finalTimeSpan">--</div>
-        </div>
-        <div class="stat-cell">
-          <div class="sc-label">Accuracy</div>
-          <div class="sc-val"><span id="accuracySpan">0</span>%</div>
-        </div>
-        <div class="stat-cell">
-          <div class="sc-label">Hints Used</div>
-          <div class="sc-val" id="hintsUsedSpan">0</div>
-        </div>
+        <div class="stat-cell"><div class="sc-label">Time Used</div><div class="sc-val" id="finalTimeSpan">--</div></div>
+        <div class="stat-cell"><div class="sc-label">Accuracy</div><div class="sc-val"><span id="accuracySpan">0</span>%</div></div>
+        <div class="stat-cell"><div class="sc-label">Hints Used</div><div class="sc-val" id="hintsUsedSpan">0</div></div>
       </div>
-
-      <div id="bonusBadge" class="bonus-badge hidden">🔥 Bonus Round Completed!</div>
-
+      <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed</div>
       <div class="complete-note">
         Your score has been saved successfully.<br>
-        <strong>Rankings will be announced by the organizers.</strong> Good luck! 🍀
+        <strong>Rankings will be announced by the organizers.</strong> Good luck!
       </div>
     </div>
   </div>
@@ -401,9 +415,9 @@
 </div>
 
 <script>
-// ══════════════════════════════════
+// ════════════════════════════════════════
 //  JSONBIN CONFIG
-// ══════════════════════════════════
+// ════════════════════════════════════════
 const JSONBIN_BIN_ID  = "69eb8daa856a6821896b21d4";
 const JSONBIN_API_KEY = "$2a$10$hTG0V.Dqe1CdsxbfPlGgo.xFZ1bWRefv66Fesc8tQnbvt3WHam7VW";
 const JSONBIN_BASE    = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
@@ -421,64 +435,321 @@ async function dbWrite(data) {
   });
   if (!r.ok) throw new Error("DB write failed");
 }
-
 let globalScores = [];
-async function loadScores() {
-  const rec = await dbRead();
-  globalScores = rec.scores || [];
-}
+async function loadScores() { const rec = await dbRead(); globalScores = rec.scores || []; }
 async function saveScore(entry) {
-  const rec    = await dbRead();
+  const rec = await dbRead();
   const scores = rec.scores || [];
   scores.push(entry);
-  scores.sort((a, b) => b.score - a.score);
+  scores.sort((a,b) => b.score - a.score);
   await dbWrite({ scores });
   globalScores = scores;
 }
-function checkUserAttempt(name) {
-  return globalScores.some(s => s.name.toLowerCase() === name.toLowerCase());
+function checkUserAttempt(name) { return globalScores.some(s => s.name.toLowerCase() === name.toLowerCase()); }
+
+// ════════════════════════════════════════
+//  HELPER: build highlighted code HTML
+// ════════════════════════════════════════
+function codeHtml(lines) {
+  // lines is an array of strings; ___  becomes the animated blank
+  return lines.map(line =>
+    line
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/___/g, '<span class="c-blank">___</span>')
+      // keywords
+      .replace(/\b(import|from|as|for|in|range|if|else|return|def|class|True|False|None|and|or|not|print)\b/g, '<span class="c-kw">$1</span>')
+      // strings (simple single/double)
+      .replace(/'([^']+)'/g, "<span class=\"c-str\">'$1'</span>")
+      .replace(/"([^"]+)"/g, '<span class="c-str">"$1"</span>')
+      // comments
+      .replace(/(#.*)$/, '<span class="c-cmt">$1</span>')
+      // numbers
+      .replace(/\b(\d+\.?\d*)\b/g, '<span class="c-num">$1</span>')
+  ).join('\n');
 }
 
-// ══════════════════════════════════
-//  QUIZ DATA
-// ══════════════════════════════════
+// ════════════════════════════════════════
+//  QUIZ DATA  — 25 core questions
+//  type: "theory" | "code"
+//  codeLines: array of strings (use ___ for blank)
+// ════════════════════════════════════════
 const coreQuestions = [
-  { text:"What is the main difference between Traditional Programming and Machine Learning?", options:["ML uses hardcoded rules","ML learns patterns from data","No difference","ML requires more hardware"], correct:1, difficulty:"easy", points:10, hint:"Think about whether the rules are written by a programmer or derived from examples." },
-  { text:"Which of the following is a supervised learning task?", options:["Clustering","Dimensionality Reduction","Classification","Association Rules"], correct:2, difficulty:"easy", points:10, hint:"Supervised learning requires labeled training data — you know the expected output." },
-  { text:"Handling missing values by replacing with column mean is known as?", options:["Drop","Imputation","Encoding","Normalization"], correct:1, difficulty:"easy", points:10, hint:"This technique 'fills in' missing values rather than removing rows entirely." },
-  { text:"StandardScaler in sklearn does what?", options:["Scales to [0,1]","Centers to mean=0, variance=1","Removes outliers","Encodes categories"], correct:1, difficulty:"easy", points:10, hint:"Think Z-score normalization: (x − μ) / σ." },
-  { text:"Which metric is best for imbalanced classification?", options:["Accuracy","Precision and Recall","Mean Absolute Error","R-squared"], correct:1, difficulty:"medium", points:15, hint:"When one class has very few samples, overall accuracy is misleading." },
-  { text:"Logistic Regression outputs:", options:["Probability between 0 and 1","Linear value","Class label only","Distance"], correct:0, difficulty:"easy", points:10, hint:"The sigmoid function squashes any real number into a specific range." },
-  { text:"What does K represent in K-Means clustering?", options:["Number of features","Number of clusters","Number of iterations","Distance metric"], correct:1, difficulty:"easy", points:10, hint:"You choose this value before running the algorithm." },
-  { text:"Silhouette Score measures:", options:["Cluster density","How similar a point is to its own cluster vs others","Distance to centroid","Accuracy of classification"], correct:1, difficulty:"medium", points:15, hint:"A score close to +1 means the point is well matched to its cluster." },
-  { text:"Which of the following is an unsupervised learning algorithm?", options:["Decision Tree","Linear Regression","K-Means","Logistic Regression"], correct:2, difficulty:"easy", points:10, hint:"Unsupervised algorithms work without labeled data." },
-  { text:"What is the purpose of feature scaling?", options:["Prevents features with larger ranges from dominating","Removes missing data","Increases accuracy always","Converts text to numbers"], correct:0, difficulty:"easy", points:10, hint:"Consider an algorithm that uses distances — a feature in kilometers vs. millimeters." },
-  { text:"In Decision Trees, splitting is based on:", options:["P-value","Information Gain / Gini Impurity","Gradient Descent","Euclidean Distance"], correct:1, difficulty:"medium", points:15, hint:"The algorithm tries to make each child node as 'pure' as possible." },
-  { text:"Precision is defined as:", options:["TP/(TP+FN)","TP/(TP+FP)","TN/(TN+FP)","Accuracy/Recall"], correct:1, difficulty:"medium", points:15, hint:"Precision focuses on: of everything predicted positive, how many actually were?" },
-  { text:"What is a centroid in K-Means?", options:["The mean of all points in a cluster","The farthest point","The median point","Randomly initialized boundary"], correct:0, difficulty:"easy", points:10, hint:"It's the geometric center recalculated each iteration." },
-  { text:"Which method helps find optimal K in K-Means?", options:["Elbow Method","Confusion Matrix","ROC Curve","Cross-Validation"], correct:0, difficulty:"medium", points:15, hint:"Plot inertia vs K and look for the 'bend' in the graph." },
-  { text:"Which evaluation metric is used for regression problems?", options:["Accuracy","R-squared","Precision","Silhouette Score"], correct:1, difficulty:"easy", points:10, hint:"Regression predicts continuous values, not class labels." },
-  { text:"What does a high Recall indicate?", options:["Few false positives","Few false negatives","High overall accuracy","Low precision"], correct:1, difficulty:"medium", points:15, hint:"Recall = TP / (TP + FN). High recall means you're missing fewer positives." },
-  { text:"In Linear Regression, feature selection helps:", options:["Reduce overfitting and improve interpretability","Increase training time","Convert categorical data","Normalize data"], correct:0, difficulty:"easy", points:10, hint:"Using only relevant features removes noise from the model." },
-  { text:"Which library is primarily used for data manipulation in Python?", options:["NumPy","Pandas","Matplotlib","Scikit-learn"], correct:1, difficulty:"easy", points:10, hint:"It provides DataFrames — think spreadsheets in Python." },
-  { text:"What is the threshold typically used in logistic regression for binary classification?", options:["0.3","0.5","0.7","1.0"], correct:1, difficulty:"easy", points:10, hint:"The default splits the probability output exactly in half." },
-  { text:"Which of the following is an example of reinforcement learning?", options:["Spam detection","AlphaGo playing Go","Customer segmentation","House price prediction"], correct:1, difficulty:"medium", points:15, hint:"RL agents learn by receiving rewards or penalties from an environment." }
-];
-const bonusQuestions = [
-  { text:"Which clustering validation metric ranges from -1 to +1?", options:["Davies-Bouldin","Inertia","Silhouette Score","Purity"], correct:2, difficulty:"hard", points:25, hint:"+1 = perfect cluster separation, 0 = overlapping, -1 = wrong cluster." },
-  { text:"The decision boundary in SVM is?", options:["Hyperplane separating classes","Clustering threshold","Regression line","Neural network layer"], correct:0, difficulty:"hard", points:25, hint:"SVM maximizes the margin between two classes in feature space." },
-  { text:"Which is NOT a proper method to handle outliers?", options:["IQR capping","Z-score removal","Mean imputation","Clustering based removal"], correct:2, difficulty:"medium", points:20, hint:"One of these options is a method for missing values, not outliers." },
-  { text:"In K-Means, what happens if K is too high?", options:["Underfitting","Over-segmentation, high variance","Better silhouette always","Centroids collapse"], correct:1, difficulty:"hard", points:25, hint:"Too many clusters = each cluster has very few, possibly single points." },
-  { text:"Which metric focuses on the positive class and balances precision/recall?", options:["F1-Score","Accuracy","R-squared","MAE"], correct:0, difficulty:"medium", points:20, hint:"It is the harmonic mean of Precision and Recall." }
+
+  // ── THEORY (15 questions) ──────────────────────────────────────────────
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"What is the main difference between Traditional Programming and Machine Learning?",
+    options:["ML uses hardcoded rules","ML learns patterns from data","No difference","ML requires more hardware"],
+    correct:1,
+    hint:"In traditional programming you write the rules. In ML the rules are discovered from data." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"Which of the following is a supervised learning task?",
+    options:["Clustering","Dimensionality Reduction","Classification","Association Rules"],
+    correct:2,
+    hint:"Supervised learning requires labeled training data — you know the expected output." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"What does 'Garbage in, Garbage out' mean in Machine Learning?",
+    options:["Models need fast hardware","Poor quality data leads to poor model results","You must delete old files","Garbage collection improves speed"],
+    correct:1,
+    hint:"This phrase refers to data quality — the most important step in the ML pipeline." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"Data Preprocessing is the process of cleaning, transforming, and organizing raw data. What is its main goal?",
+    options:["Make data look pretty","Make data accurate, consistent, and suitable for modeling","Increase dataset size","Remove all columns"],
+    correct:1,
+    hint:"The slides define it as making data ready for machine learning applications." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"Which Pandas method is used to detect missing values in a DataFrame?",
+    options:[".dropna()","isnull()","fillna()","describe()"],
+    correct:1,
+    hint:"From Lab 1: combine it with .sum() to count the missing values per column." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"Logistic Regression outputs a value between 0 and 1. What transformation produces this output?",
+    options:["ReLU function","Softmax function","Sigmoid function","Linear function"],
+    correct:2,
+    hint:"The slide shows the formula: phi(z) = 1 / (1 + e^-z)" },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"What does K represent in K-Means clustering?",
+    options:["Number of features","Number of clusters","Number of iterations","Distance metric"],
+    correct:1,
+    hint:"You choose this value before running the algorithm." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"In the K-Means algorithm, what is a centroid?",
+    options:["The farthest data point from center","The mean of all points in a cluster","The boundary between two clusters","A randomly chosen outlier"],
+    correct:1,
+    hint:"The algorithm recalculates it every iteration as the geometric center of the cluster." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"The Elbow Method is used to find the optimal value of K in K-Means. What does the 'elbow' represent?",
+    options:["The point where WCSS stops decreasing rapidly","The maximum accuracy point","The highest silhouette score","The centroid location"],
+    correct:0,
+    hint:"Plot WCSS vs K and look for where adding more clusters gives diminishing returns." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"What is Label Encoding used for in data preprocessing?",
+    options:["Removing null values","Converting ordered categories to integers (e.g. low=0, medium=1, high=2)","Scaling numerical features","Splitting the dataset"],
+    correct:1,
+    hint:"From the slides: suitable for Ordinal values where order matters." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"One-Hot Encoding creates binary columns for each category. When should you use it instead of Label Encoding?",
+    options:["For ordinal (ordered) categories","For nominal (unordered) categories like colors or city names","When the dataset is very large","When all values are numeric"],
+    correct:1,
+    hint:"Example from the slides: Red → [1,0,0], Blue → [0,1,0], Green → [0,0,1]" },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"What does a high Recall score indicate about a classification model?",
+    options:["Few false positives","Few false negatives — the model finds most actual positives","High overall accuracy","Low precision"],
+    correct:1,
+    hint:"Recall = TP / (TP + FN). High recall means you are not missing many real positive cases." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"The Silhouette Score evaluates clustering quality. What does a score close to +1 mean?",
+    options:["Points are misclassified","Points are on the cluster boundary","Points are well clustered and far from other clusters","The model has too many clusters"],
+    correct:2,
+    hint:"From the clustering slides: range is -1 to +1. +1 = well clustered." },
+
+  { type:"theory", difficulty:"medium", points:15,
+    text:"In the ML Pipeline, which step comes right after Data Collection?",
+    options:["Model Building","Model Evaluation","Data Preprocessing","Feature Engineering"],
+    correct:2,
+    hint:"From the 'most important step' slide — data preprocessing is highlighted as the critical step." },
+
+  { type:"theory", difficulty:"easy", points:10,
+    text:"Which of the following is an example of Reinforcement Learning?",
+    options:["Spam detection","AlphaGo playing Go","Customer segmentation","House price prediction"],
+    correct:1,
+    hint:"RL agents learn by receiving rewards or penalties from an environment." },
+
+  // ── CODING (10 questions) ─────────────────────────────────────────────
+
+  { type:"code", difficulty:"easy", points:10,
+    text:"To load a CSV file into a Pandas DataFrame, which method do you use?",
+    codeLines:[
+      "import pandas as pd",
+      "",
+      "df = pd.___(  'students.csv'  )"
+    ],
+    options:["read_csv()","load_csv()","open_csv()","import_csv()"],
+    correct:0,
+    hint:"This is the most common Pandas method. The file name goes inside the parentheses." },
+
+  { type:"code", difficulty:"easy", points:10,
+    text:"To see the first 5 rows of a DataFrame after loading it, which method do you call?",
+    codeLines:[
+      "df = pd.read_csv( 'students.csv' )",
+      "",
+      "df.___()    # shows first 5 rows"
+    ],
+    options:["head()","top()","first()","show()"],
+    correct:0,
+    hint:"Lab 1 uses this right after loading the dataset to understand its structure." },
+
+  { type:"code", difficulty:"easy", points:10,
+    text:"To count missing values in each column of a DataFrame, which combination of methods is used?",
+    codeLines:[
+      "# Count missing values per column",
+      "",
+      "df.___().sum()"
+    ],
+    options:["isnull()","missing()","isna_count()","findnull()"],
+    correct:0,
+    hint:"From Lab 1: isnull() returns True where values are missing, then .sum() counts them." },
+
+  { type:"code", difficulty:"easy", points:10,
+    text:"To fill missing values in the 'Hours_Studied' column with the column mean, which code is correct?",
+    codeLines:[
+      "# Fill missing values with mean",
+      "",
+      "df['Hours_Studied'].fillna(  df['Hours_Studied'].___()  )"
+    ],
+    options:["mean()","average()","median()","sum()"],
+    correct:0,
+    hint:"Lab 1 Task: fill the null values in 'Hours_Studied' with their mean." },
+
+  { type:"code", difficulty:"easy", points:10,
+    text:"To remove duplicate rows from a DataFrame, which method do you use?",
+    codeLines:[
+      "# Remove duplicate rows",
+      "",
+      "df = df.___()"],
+    options:["drop_duplicates()","remove_dupes()","del_duplicates()","unique_rows()"],
+    correct:0,
+    hint:"Lab 1: We usually remove duplicates especially when combining different data sources." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"StandardScaler centers data to mean=0 and variance=1. In the K-Means lab, which method applies the scaler to the data?",
+    codeLines:[
+      "from sklearn.preprocessing import StandardScaler",
+      "",
+      "scaler = StandardScaler()",
+      "X_scaled = scaler.___(X)"
+    ],
+    options:["fit_transform()","apply()","scale()","normalize()"],
+    correct:0,
+    hint:"From the K-Means notebook: this single method both fits the scaler AND transforms the data." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"After scaling the data, how do you create and fit a K-Means model with 5 clusters?",
+    codeLines:[
+      "from sklearn.cluster import KMeans",
+      "",
+      "kmeans = KMeans(n_clusters=5, random_state=42)",
+      "y_kmeans = kmeans.___(X_scaled)"
+    ],
+    options:["fit_predict()","train()","fit_only()","predict_only()"],
+    correct:0,
+    hint:"From the K-Means notebook: this method both fits the model AND returns cluster labels." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"To calculate the Silhouette Score of a K-Means clustering result, which function is used?",
+    codeLines:[
+      "from sklearn.metrics import ___",
+      "",
+      "score = silhouette_score(X_scaled, y_kmeans)",
+      "print(f'Score: {score:.4f}')"
+    ],
+    options:["silhouette_score","accuracy_score","cluster_score","kmeans_score"],
+    correct:0,
+    hint:"From the K-Means notebook: it measures how well data points fit within their clusters." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"In Lab 2, to split the dataset into 80% training and 20% testing, which parameter is set?",
+    codeLines:[
+      "from sklearn.model_selection import train_test_split",
+      "",
+      "X_train, X_test, y_train, y_test = train_test_split(",
+      "    X, y, ___=0.2, random_state=42",
+      ")"
+    ],
+    options:["test_size","split_ratio","val_size","train_size"],
+    correct:0,
+    hint:"Lab 2 instructions: Set test_size = 0.2 and random_state = 42." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"The IQR method detects outliers. How is the IQR calculated from Q1 and Q3?",
+    codeLines:[
+      "Q1 = df['Hours_Studied'].quantile(0.25)",
+      "Q3 = df['Hours_Studied'].quantile(0.75)",
+      "",
+      "IQR = ___ - ___"
+    ],
+    options:["Q3 - Q1","Q1 - Q3","Q3 + Q1","Q3 * Q1"],
+    correct:0,
+    hint:"From Lab 1: IQR = Q3 minus Q1. The interquartile range is the middle 50% of the data." },
+
+  { type:"code", difficulty:"medium", points:15,
+    text:"To apply One-Hot Encoding to all remaining text columns in a DataFrame, which function is used?",
+    codeLines:[
+      "# Encode all categorical (object) columns",
+      "",
+      "df = pd.___(df,",
+      "    columns=df.select_dtypes(include='object').columns,",
+      "    drop_first=True)"
+    ],
+    options:["get_dummies()","one_hot()","encode_columns()","label_encode()"],
+    correct:0,
+    hint:"Lab 1 Part 3: this Pandas function converts text columns into binary 0/1 columns." },
 ];
 
-// ══════════════════════════════════
+// Bonus questions (unlocked if under 20 min)
+const bonusQuestions = [
+  { type:"theory", difficulty:"hard", points:25,
+    text:"Which clustering validation metric ranges from -1 to +1 and measures how well each point fits its cluster?",
+    options:["Davies-Bouldin Index","Inertia (WCSS)","Silhouette Score","Purity Score"],
+    correct:2,
+    hint:"+1 means perfectly clustered. 0 means on boundary. -1 means likely misclassified." },
+
+  { type:"theory", difficulty:"hard", points:25,
+    text:"In K-Means, what happens when K is set too high relative to the actual number of natural groups?",
+    options:["Underfitting — clusters are too broad","Over-segmentation with high variance and possibly single-point clusters","The silhouette score always improves","Centroids collapse into one point"],
+    correct:1,
+    hint:"Too many clusters splits real groups and creates meaningless micro-clusters." },
+
+  { type:"code", difficulty:"hard", points:25,
+    text:"In Lab 2, to scale ONLY the training data correctly (fit on train, transform both), which approach is correct?",
+    codeLines:[
+      "scaler = StandardScaler()",
+      "X_train_scaled = scaler.fit_transform(X_train)",
+      "X_test_scaled  = scaler.___(X_test)    # NO fit here!"
+    ],
+    options:["transform()","fit_transform()","fit()","scale()"],
+    correct:0,
+    hint:"You NEVER fit the scaler on test data — that would cause data leakage. Only .transform() on test." },
+
+  { type:"theory", difficulty:"hard", points:25,
+    text:"The classification slide defines precision as TP/(TP+FP). What does FP stand for and when does high precision matter?",
+    options:["False Positive — matters when false alarms are costly (e.g. spam filter)","False Positive — matters when missing cases is costly (e.g. cancer screening)","False Prediction — always matters equally","False Precision — only for regression"],
+    correct:0,
+    hint:"High precision = when you predict positive, you are usually right. Bad false alarms matter here." },
+
+  { type:"code", difficulty:"hard", points:20,
+    text:"To calculate the R-squared score after making predictions in Lab 2, which function and arguments are correct?",
+    codeLines:[
+      "from sklearn.metrics import r2_score",
+      "",
+      "r2 = r2_score( ___, y_pred )"
+    ],
+    options:["y_test","y_train","X_test","y_pred"],
+    correct:0,
+    hint:"R2 compares actual test labels vs predicted labels. y_test comes first, then y_pred." },
+];
+
+// ════════════════════════════════════════
 //  STATE
-// ══════════════════════════════════
+// ════════════════════════════════════════
+const TIMER_SECONDS = 2700; // 45 minutes
+const BONUS_THRESHOLD = 1200; // under 20 min remaining = over 25 min used... actually check remaining >= 1500 (25min left)
 let currentQuestions=[], userAnswers=[], hintsUsed=[];
 let currentIndex=0, quizActive=false, timerInterval=null;
 let totalPoints=0, bonusUnlocked=false, quizFinished=false;
-let questionStartTime=0, remainingSeconds=1200, currentPlayer="", hintsCount=0;
+let questionStartTime=0, remainingSeconds=TIMER_SECONDS, currentPlayer="", hintsCount=0;
 const HINT_COST = 5;
 
 const landingPage      = document.getElementById('landingPage');
@@ -492,6 +763,9 @@ const hintBox          = document.getElementById('hintBox');
 const playerNameInput  = document.getElementById('playerNameInput');
 const nameError        = document.getElementById('nameError');
 const loadingOverlay   = document.getElementById('loadingOverlay');
+const codeBlockEl      = document.getElementById('codeBlock');
+const codeContentEl    = document.getElementById('codeContent');
+const typeChipEl       = document.getElementById('typeChip');
 
 function startTimer(s) {
   remainingSeconds = s;
@@ -501,8 +775,8 @@ function startTimer(s) {
     remainingSeconds--;
     const m = Math.floor(remainingSeconds/60), sec = remainingSeconds%60;
     document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-    if (remainingSeconds <= 60) document.getElementById('timerChip').classList.add('warning');
-    if (remainingSeconds <= 0)  { clearInterval(timerInterval); endQuiz(); }
+    if (remainingSeconds <= 120) document.getElementById('timerChip').classList.add('warning');
+    if (remainingSeconds <= 0) { clearInterval(timerInterval); endQuiz(); }
   }, 1000);
 }
 
@@ -515,12 +789,12 @@ function triggerBonus() {
   const b = document.getElementById('bonusBanner');
   b.classList.remove('hidden');
   document.getElementById('qTotal').textContent = `/${currentQuestions.length}`;
-  setTimeout(() => b.classList.add('hidden'), 4000);
+  setTimeout(() => b.classList.add('hidden'), 4500);
 }
 
 function showToast(msg, type='score') {
   const t = document.createElement('div');
-  t.className = type === 'hint' ? 'hint-toast' : 'multiplier-toast';
+  t.className = type === 'hint' ? 'hint-toast' : 'speed-toast';
   t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 2200);
@@ -531,68 +805,95 @@ function renderQuestion() {
   document.getElementById('currentQNum').textContent = currentIndex+1;
   document.getElementById('qTotal').textContent = `/${len}`;
   document.getElementById('quizProgress').style.width = `${((currentIndex+1)/len)*100}%`;
+
+  // Difficulty badge
   const db = document.getElementById('diffBadge');
   db.textContent = q.difficulty.charAt(0).toUpperCase()+q.difficulty.slice(1);
   db.className = `diff-badge diff-${q.difficulty}`;
+
+  // Type chip
+  const isCode = q.type === 'code';
+  typeChipEl.textContent = isCode ? 'Code' : 'Theory';
+  typeChipEl.className   = isCode ? 'type-chip code' : 'type-chip';
+
+  // Question text
   document.getElementById('questionText').textContent = q.text;
-  hintBox.classList.add('hidden'); hintBox.innerHTML='';
-  const answered=userAnswers[currentIndex], hintDone=hintsUsed[currentIndex];
+
+  // Code block
+  if (isCode && q.codeLines) {
+    codeContentEl.innerHTML = codeHtml(q.codeLines);
+    codeBlockEl.classList.remove('hidden');
+  } else {
+    codeBlockEl.classList.add('hidden');
+  }
+
+  // Hint
+  hintBox.classList.add('hidden'); hintBox.innerHTML = '';
+  const answered = userAnswers[currentIndex], hintDone = hintsUsed[currentIndex];
   hintBtn.disabled = !!(answered || hintDone);
-  if (hintDone) { hintBox.innerHTML=`<strong>💡 Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden'); }
+  if (hintDone) { hintBox.innerHTML = `<strong>Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden'); }
+
+  // Options
   const container = document.getElementById('optionsContainer');
-  container.innerHTML='';
-  q.options.forEach((opt,idx)=>{
-    const btn=document.createElement('button');
-    btn.className='opt-btn';
-    btn.innerHTML=`<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
+  container.innerHTML = '';
+  q.options.forEach((opt,idx) => {
+    const btn = document.createElement('button');
+    btn.className = isCode ? 'opt-btn code-opt' : 'opt-btn';
+    btn.innerHTML = `<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
     if (answered) {
       btn.classList.add('answered');
-      if (idx===q.correct) btn.classList.add('correct');
-      else if (idx===answered.selected) btn.classList.add('wrong');
+      if (idx === q.correct) btn.classList.add('correct');
+      else if (idx === answered.selected) btn.classList.add('wrong');
     }
-    btn.onclick=()=>{
-      if (!quizActive||answered) return;
-      const isCorrect=idx===q.correct, ts=(Date.now()-questionStartTime)/1000;
-      let mult=1.0;
+    btn.onclick = () => {
+      if (!quizActive || answered) return;
+      const isCorrect = idx === q.correct;
+      const ts = (Date.now() - questionStartTime)/1000;
+      let mult = 1.0;
       if (isCorrect) {
         if (ts<=3) mult=1.5; else if (ts<=6) mult=1.3; else if (ts<=10) mult=1.1;
-        const earned=Math.floor(q.points*mult);
-        totalPoints+=earned;
-        document.getElementById('liveScore').textContent=totalPoints;
-        if (mult>1) showToast(`${mult}× Speed Bonus! +${earned} pts`);
+        const earned = Math.floor(q.points*mult);
+        totalPoints += earned;
+        document.getElementById('liveScore').textContent = totalPoints;
+        if (mult > 1) showToast(`${mult}x Speed Bonus! +${earned} pts`);
       }
-      userAnswers[currentIndex]={selected:idx,isCorrect};
-      btn.classList.add(isCorrect?'correct':'wrong');
+      userAnswers[currentIndex] = { selected:idx, isCorrect };
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
       if (!isCorrect) container.children[q.correct].classList.add('correct');
-      hintBtn.disabled=true;
-      if (!bonusUnlocked&&currentIndex===19&&remainingSeconds>=600) setTimeout(()=>triggerBonus(),300);
-      setTimeout(()=>{ if (currentIndex+1<currentQuestions.length){currentIndex++;renderQuestion();}else endQuiz(); },800);
+      hintBtn.disabled = true;
+      // Bonus: if answered Q24 (index 24) with >=1500s remaining
+      if (!bonusUnlocked && currentIndex === coreQuestions.length-1 && remainingSeconds >= 1500)
+        setTimeout(() => triggerBonus(), 300);
+      setTimeout(() => {
+        if (currentIndex+1 < currentQuestions.length) { currentIndex++; renderQuestion(); }
+        else endQuiz();
+      }, 900);
     };
     container.appendChild(btn);
   });
-  prevBtn.disabled = currentIndex===0;
+
+  prevBtn.disabled = currentIndex === 0;
   questionStartTime = Date.now();
 }
 
-hintBtn.onclick=()=>{
-  const q=currentQuestions[currentIndex];
-  if (hintsUsed[currentIndex]||userAnswers[currentIndex]||!quizActive) return;
-  hintsUsed[currentIndex]=true; hintsCount++;
-  totalPoints=Math.max(0,totalPoints-HINT_COST);
-  document.getElementById('liveScore').textContent=totalPoints;
-  showToast(`💡 Hint used  −${HINT_COST} pts`,'hint');
-  hintBox.innerHTML=`<strong>💡 Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden');
-  hintBtn.disabled=true;
+hintBtn.onclick = () => {
+  const q = currentQuestions[currentIndex];
+  if (hintsUsed[currentIndex] || userAnswers[currentIndex] || !quizActive) return;
+  hintsUsed[currentIndex] = true; hintsCount++;
+  totalPoints = Math.max(0, totalPoints - HINT_COST);
+  document.getElementById('liveScore').textContent = totalPoints;
+  showToast(`Hint used  -${HINT_COST} pts`, 'hint');
+  hintBox.innerHTML = `<strong>Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden');
+  hintBtn.disabled = true;
 };
 
 async function endQuiz() {
   if (quizFinished) return;
-  quizFinished=true; quizActive=false; clearInterval(timerInterval);
-  const totalLen=currentQuestions.length;
-  const correct=userAnswers.filter(a=>a&&a.isCorrect).length;
-  const timeUsed=1200-remainingSeconds;
-  const timeStr=`${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
-  // Populate completion screen
+  quizFinished = true; quizActive = false; clearInterval(timerInterval);
+  const totalLen = currentQuestions.length;
+  const correct  = userAnswers.filter(a => a && a.isCorrect).length;
+  const timeUsed = TIMER_SECONDS - remainingSeconds;
+  const timeStr  = `${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
   document.getElementById('completeName').textContent   = `Well done, ${currentPlayer}!`;
   document.getElementById('finalScoreSpan').textContent = totalPoints;
   document.getElementById('finalTimeSpan').textContent  = timeStr;
@@ -601,38 +902,37 @@ async function endQuiz() {
   if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
   quizContainer.classList.add('hidden');
   resultsDashboard.classList.remove('hidden');
-  // Save silently in background
-  loadingOverlay.querySelector('.loading-text').textContent='Saving your score...';
+  loadingOverlay.querySelector('.loading-text').textContent = 'Saving your score...';
   loadingOverlay.classList.remove('hidden');
   try {
     await saveScore({ name:currentPlayer, score:totalPoints, time:timeStr,
       hintsUsed:hintsCount, bonusCompleted:bonusUnlocked,
       accuracy:parseFloat(((correct/totalLen)*100).toFixed(1)), timestamp:Date.now() });
-  } catch(e) { console.error("Save failed:",e); }
+  } catch(e) { console.error("Save failed:", e); }
   loadingOverlay.classList.add('hidden');
 }
 
 async function startQuiz() {
-  const name=playerNameInput.value.trim();
-  if (!name) { nameError.textContent="⚠ Please enter your name to start"; nameError.classList.remove('hidden'); return; }
+  const name = playerNameInput.value.trim();
+  if (!name) { nameError.textContent="Please enter your name to start"; nameError.classList.remove('hidden'); return; }
   nameError.classList.add('hidden');
-  if (checkUserAttempt(name)) { nameError.textContent="⚠ You've already taken the quiz! One attempt per user."; nameError.classList.remove('hidden'); return; }
+  if (checkUserAttempt(name)) { nameError.textContent="You have already taken the quiz. One attempt per participant."; nameError.classList.remove('hidden'); return; }
   currentPlayer=name; currentQuestions=[...coreQuestions];
-  userAnswers=new Array(20).fill(null); hintsUsed=new Array(20).fill(false);
+  userAnswers=new Array(coreQuestions.length).fill(null); hintsUsed=new Array(coreQuestions.length).fill(false);
   hintsCount=0; currentIndex=0; totalPoints=0; bonusUnlocked=false; quizFinished=false;
   document.getElementById('liveScore').textContent='0';
   document.getElementById('bonusBadge').classList.add('hidden');
-  document.getElementById('timerDisplay').textContent='20:00';
+  document.getElementById('timerDisplay').textContent='45:00';
   document.getElementById('timerChip').classList.remove('warning');
-  document.getElementById('qTotal').textContent='/20';
+  document.getElementById('qTotal').textContent=`/${coreQuestions.length}`;
   landingPage.classList.add('hidden'); resultsDashboard.classList.add('hidden');
   quizContainer.classList.remove('hidden');
-  renderQuestion(); quizActive=true; startTimer(1200);
+  renderQuestion(); quizActive=true; startTimer(TIMER_SECONDS);
 }
 
 startBtn.onclick=startQuiz;
-nextBtn.onclick=()=>{ if (quizActive&&currentIndex+1<currentQuestions.length&&userAnswers[currentIndex]){currentIndex++;renderQuestion();} };
-prevBtn.onclick=()=>{ if (quizActive&&currentIndex>0){currentIndex--;renderQuestion();} };
+nextBtn.onclick=()=>{ if(quizActive&&currentIndex+1<currentQuestions.length&&userAnswers[currentIndex]){currentIndex++;renderQuestion();} };
+prevBtn.onclick=()=>{ if(quizActive&&currentIndex>0){currentIndex--;renderQuestion();} };
 
 (async()=>{
   try { await loadScores(); } catch(e) { console.warn("Load scores:",e); }
@@ -640,9 +940,9 @@ prevBtn.onclick=()=>{ if (quizActive&&currentIndex>0){currentIndex--;renderQuest
   landingPage.classList.remove('hidden');
 })();
 
-// ══════════════════════════════════
-//  AI NEURAL NETWORK ANIMATION
-// ══════════════════════════════════
+// ════════════════════════════════════════
+//  NEURAL NETWORK ANIMATION
+// ════════════════════════════════════════
 (function(){
   const canvas=document.getElementById('neuralCanvas'), ctx=canvas.getContext('2d');
   let W,H,nodes,pulses;
@@ -655,48 +955,38 @@ prevBtn.onclick=()=>{ if (quizActive&&currentIndex>0){currentIndex--;renderQuest
   }
   const lbls=Array.from({length:8},()=>({text:LABELS[Math.floor(Math.random()*LABELS.length)],x:Math.random()*1200,y:Math.random()*800,vy:rand(-0.15,-0.05),alpha:rand(0.04,0.09)}));
   function spawnPulse(){
-    if (Math.random()>0.015) return;
+    if(Math.random()>0.015)return;
     const from=nodes[Math.floor(Math.random()*nodes.length)];
     const cands=nodes.filter(n=>Math.hypot(n.x-from.x,n.y-from.y)<MD&&n!==from);
-    if (!cands.length) return;
+    if(!cands.length)return;
     const to=cands[Math.floor(Math.random()*cands.length)];
     pulses.push({from,to,t:0}); from.activated=true; from.activationTimer=18;
   }
   function draw(){
     ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      n.x+=n.vx; n.y+=n.vy;
-      if (n.x<0||n.x>W) n.vx*=-1; if (n.y<0||n.y>H) n.vy*=-1;
-      if (n.activationTimer>0) n.activationTimer--; else n.activated=false;
-    });
-    for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++){
+    nodes.forEach(n=>{ n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>W)n.vx*=-1; if(n.y<0||n.y>H)n.vy*=-1; if(n.activationTimer>0)n.activationTimer--; else n.activated=false; });
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
       const d=Math.hypot(nodes[j].x-nodes[i].x,nodes[j].y-nodes[i].y);
-      if (d<MD){ ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y);
-        ctx.strokeStyle=`rgba(232,41,76,${(1-d/MD)*0.12})`; ctx.lineWidth=0.8; ctx.stroke(); }
+      if(d<MD){ ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.strokeStyle=`rgba(232,41,76,${(1-d/MD)*0.12})`; ctx.lineWidth=0.8; ctx.stroke(); }
     }
     spawnPulse(); pulses=pulses.filter(p=>p.t<=1);
     pulses.forEach(p=>{
       p.t+=PS/Math.hypot(p.to.x-p.from.x,p.to.y-p.from.y);
       const px=p.from.x+(p.to.x-p.from.x)*p.t, py=p.from.y+(p.to.y-p.from.y)*p.t;
-      const g=ctx.createRadialGradient(px,py,0,px,py,10);
-      g.addColorStop(0,'rgba(232,41,76,0.55)'); g.addColorStop(1,'rgba(232,41,76,0)');
+      const g=ctx.createRadialGradient(px,py,0,px,py,10); g.addColorStop(0,'rgba(232,41,76,0.55)'); g.addColorStop(1,'rgba(232,41,76,0)');
       ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
       ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fillStyle='rgba(232,41,76,0.9)'; ctx.fill();
-      if (p.t>=1){ p.to.activated=true; p.to.activationTimer=14; }
+      if(p.t>=1){ p.to.activated=true; p.to.activationTimer=14; }
     });
     nodes.forEach(n=>{
-      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
-      g.addColorStop(0,n.activated?'rgba(232,41,76,0.7)':'rgba(232,41,76,0.25)'); g.addColorStop(1,'rgba(232,41,76,0)');
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5); g.addColorStop(0,n.activated?'rgba(232,41,76,0.7)':'rgba(232,41,76,0.25)'); g.addColorStop(1,'rgba(232,41,76,0)');
       ctx.beginPath(); ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
       ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fillStyle=n.activated?'rgba(232,41,76,0.85)':'rgba(232,41,76,0.35)'; ctx.fill();
     });
-    lbls.forEach(l=>{
-      l.y+=l.vy; if (l.y<-20){l.y=H+20;l.x=Math.random()*W;l.text=LABELS[Math.floor(Math.random()*LABELS.length)];}
-      ctx.font='700 11px "Space Mono",monospace'; ctx.fillStyle=`rgba(232,41,76,${l.alpha})`; ctx.fillText(l.text,l.x,l.y);
-    });
+    lbls.forEach(l=>{ l.y+=l.vy; if(l.y<-20){l.y=H+20;l.x=Math.random()*W;l.text=LABELS[Math.floor(Math.random()*LABELS.length)];} ctx.font='700 11px "Space Mono",monospace'; ctx.fillStyle=`rgba(232,41,76,${l.alpha})`; ctx.fillText(l.text,l.x,l.y); });
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize',()=>{resize();initNodes()});
+  window.addEventListener('resize',()=>{resize();initNodes();});
   resize(); initNodes(); draw();
 })();
 </script>
