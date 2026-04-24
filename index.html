@@ -19,7 +19,6 @@
     --muted: #6B7280;
     --code-bg: #1E1A2E;
     --code-text: #E2D9F3;
-    --code-accent: #A78BFA;
     --code-green: #6EE7B7;
     --code-yellow: #FDE68A;
     --mono: 'Space Mono', monospace;
@@ -43,12 +42,14 @@
     padding: 32px 24px;
   }
 
+  /* Logo */
   .logo-header {
     display: flex; flex-direction: column; align-items: center; gap: 0;
     margin-bottom: 28px; animation: fadeDown 0.6s ease both; width: 100%; max-width: 420px;
   }
   .logo-header img { width: 180px; height: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(232,41,76,0.15)); }
 
+  /* Card */
   .card {
     background: var(--card); border: 1px solid var(--border); border-radius: 28px;
     box-shadow: 0 20px 40px -10px rgba(232,41,76,0.08), 0 4px 12px rgba(0,0,0,0.02);
@@ -139,58 +140,35 @@
   .score-chip, .timer-chip { background: var(--card2); }
   .type-chip.code { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); color: #7C3AED; }
   .timer-chip.warning { color: var(--red); border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.05); animation: pulseWarning 1s infinite; }
-  @keyframes pulseWarning { 0%,100% { box-shadow: 0 0 0 0 rgba(232,41,76,0); } 50% { box-shadow: 0 0 0 4px rgba(232,41,76,0.15); } }
+  @keyframes pulseWarning { 0%,100%{box-shadow:0 0 0 0 rgba(232,41,76,0);}50%{box-shadow:0 0 0 4px rgba(232,41,76,0.15);} }
 
   /* Progress */
   .progress-wrap { padding: 14px 32px 0; }
   .progress-track { background: rgba(0,0,0,0.05); border-radius: 100px; height: 5px; }
   .progress-fill { background: linear-gradient(90deg, var(--red), var(--pink)); height: 5px; border-radius: 100px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
 
-  /* Question area */
+  /* Question */
   .question-area { padding: 20px 32px 0; }
   .diff-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; }
   .diff-easy   { background: rgba(72,199,142,0.1);  color: #2E8B57; border: 1px solid rgba(72,199,142,0.3); }
   .diff-medium { background: rgba(245,158,11,0.1);  color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
   .diff-hard   { background: rgba(232,41,76,0.1);   color: var(--red); border: 1px solid rgba(232,41,76,0.3); }
-
   #questionText { font-size: clamp(16px,2.8vw,21px); font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 16px; }
 
-  /* ── CODE BLOCK ── */
+  /* Code block */
   .code-block {
-    background: var(--code-bg);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(167,139,250,0.2);
-    position: relative;
-    overflow-x: auto;
+    background: var(--code-bg); border-radius: 14px; padding: 18px 20px; margin-bottom: 20px;
+    border: 1px solid rgba(167,139,250,0.2); overflow-x: auto;
   }
-  .code-block pre {
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--code-text);
-    white-space: pre;
-  }
-  .code-block .c-kw  { color: #C084FC; }   /* keyword: import, from, for, if */
-  .code-block .c-fn  { color: #67E8F9; }   /* function names */
-  .code-block .c-str { color: var(--code-green); }  /* strings */
-  .code-block .c-num { color: var(--code-yellow); } /* numbers */
-  .code-block .c-cmt { color: #64748B; font-style: italic; } /* comments */
-  .code-block .c-var { color: #FCA5A5; }   /* variables/objects */
+  .code-block pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--code-text); white-space: pre; }
+  .code-block .c-kw  { color: #C084FC; }
+  .code-block .c-str { color: var(--code-green); }
+  .code-block .c-num { color: var(--code-yellow); }
+  .code-block .c-cmt { color: #64748B; font-style: italic; }
   .code-block .c-blank {
-    display: inline-block;
-    background: rgba(232,41,76,0.25);
-    border: 2px dashed var(--red);
-    border-radius: 6px;
-    padding: 1px 14px;
-    color: rgba(232,41,76,0.8);
-    font-weight: 700;
-    min-width: 80px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    display: inline-block; background: rgba(232,41,76,0.25); border: 2px dashed var(--red);
+    border-radius: 6px; padding: 1px 14px; color: rgba(232,41,76,0.8); font-weight: 700;
+    min-width: 80px; text-align: center; vertical-align: middle; font-size: 12px; letter-spacing: 0.1em;
   }
   .code-label {
     font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
@@ -214,18 +192,25 @@
     transition: all 0.15s; display: flex; align-items: center; gap: 12px; font-family: var(--sans);
   }
   .opt-btn.code-opt { font-family: var(--mono); font-size: 13px; background: #F8F6FF; border-color: rgba(124,58,237,0.12); }
-  .opt-btn:hover:not(.answered) { border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.03); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,41,76,0.05); }
+  .opt-btn:hover:not(.answered) { border-color: rgba(232,41,76,0.4); background: rgba(232,41,76,0.03); transform: translateY(-1px); }
   .opt-btn.code-opt:hover:not(.answered) { border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.05); }
+
+  /* Selected — neutral grey, no right/wrong reveal */
+  .opt-btn.selected {
+    border-color: rgba(100,100,100,0.35);
+    background: rgba(100,100,100,0.06);
+    color: var(--text);
+  }
+  .opt-btn.selected .opt-label {
+    background: #6B7280; border-color: #6B7280; color: #fff;
+  }
+  .opt-btn.answered { cursor: default; }
+
   .opt-label {
     width: 28px; height: 28px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06);
     display: flex; align-items: center; justify-content: center; font-family: var(--mono);
     font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0;
   }
-  .opt-btn.correct { border-color: #48C78E; background: rgba(72,199,142,0.05); color: #1A5336; }
-  .opt-btn.correct .opt-label { background: #48C78E; border-color: #48C78E; color: #fff; }
-  .opt-btn.wrong   { border-color: var(--red); background: rgba(232,41,76,0.05); color: var(--red); }
-  .opt-btn.wrong .opt-label { background: var(--red); border-color: var(--red); color: #fff; }
-  .opt-btn.answered { cursor: default; }
 
   /* Footer */
   .quiz-footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 32px 28px; gap: 12px; }
@@ -239,38 +224,51 @@
     padding: 12px; margin: 10px 32px 0; border-radius: 8px;
   }
 
-  /* Completion screen */
-  .complete-wrap { padding: 44px 40px 40px; text-align: center; }
-  @media (max-width: 640px) { .complete-wrap { padding: 32px 20px 32px; } }
-  .complete-logo { width: 100px; height: auto; margin-bottom: 20px; opacity: 0.9; }
-  .complete-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
-  .complete-name { font-size: clamp(18px,4vw,26px); font-weight: 900; color: var(--text); margin-bottom: 28px; }
-  .score-ring {
-    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 180px; height: 180px; border-radius: 50%;
-    border: 3px solid rgba(232,41,76,0.12);
-    background: radial-gradient(circle at 50% 40%, rgba(232,41,76,0.06) 0%, transparent 70%);
-    margin-bottom: 28px; animation: fadeUp 0.5s ease 0.2s both;
+  /* ── Completion screen — thank you only ── */
+  .complete-wrap {
+    padding: 56px 40px 52px; text-align: center;
+    display: flex; flex-direction: column; align-items: center;
   }
-  .score-ring .sr-num {
-    font-family: var(--mono); font-size: clamp(42px,10vw,60px); font-weight: 700; line-height: 1;
+  @media (max-width: 640px) { .complete-wrap { padding: 40px 24px 40px; } }
+
+  .complete-logo { width: 120px; height: auto; margin-bottom: 28px; opacity: 0.95; animation: fadeDown 0.5s ease both; }
+
+  .complete-check {
+    width: 72px; height: 72px; border-radius: 50%;
     background: linear-gradient(135deg, var(--red), var(--pink));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 28px rgba(232,41,76,0.25);
+    animation: popIn 0.5s cubic-bezier(.175,.885,.32,1.275) 0.2s both;
   }
-  .score-ring .sr-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-  .stats-strip { display: flex; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; margin-bottom: 20px; }
-  .stat-cell { flex: 1; padding: 14px 12px; border-right: 1px solid var(--border); }
-  .stat-cell:last-child { border-right: none; }
-  .stat-cell .sc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .stat-cell .sc-val { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); }
-  .bonus-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(232,41,76,0.05); border: 1px solid rgba(232,41,76,0.2);
-    color: var(--red); font-size: 13px; font-weight: 700;
-    padding: 8px 18px; border-radius: 100px; margin-bottom: 20px;
+  .complete-check svg { width: 34px; height: 34px; }
+
+  @keyframes popIn { from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);} }
+
+  .complete-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 10px; animation: fadeUp 0.4s ease 0.35s both;
   }
-  .complete-note { background: rgba(232,41,76,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; font-size: 14px; color: var(--muted); line-height: 1.65; }
-  .complete-note strong { color: var(--text); }
+  .complete-heading {
+    font-size: clamp(22px,5vw,32px); font-weight: 900; color: var(--text);
+    margin-bottom: 12px; line-height: 1.2; animation: fadeUp 0.4s ease 0.45s both;
+  }
+  .complete-sub {
+    font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 440px;
+    animation: fadeUp 0.4s ease 0.55s both;
+  }
+  .complete-sub strong { color: var(--text); }
+
+  .complete-divider {
+    width: 48px; height: 3px; border-radius: 100px;
+    background: linear-gradient(90deg, var(--red), var(--pink));
+    margin: 24px auto; animation: fadeUp 0.4s ease 0.6s both;
+  }
+
+  .complete-footer {
+    margin-top: 4px; font-size: 13px; color: var(--muted);
+    animation: fadeUp 0.4s ease 0.65s both;
+  }
 
   /* Toasts */
   .speed-toast {
@@ -289,8 +287,8 @@
     box-shadow: 0 8px 24px rgba(217,119,6,0.3);
     animation: toastIn 0.3s ease, toastOut 0.4s ease 1.6s forwards; font-size: 13px;
   }
-  @keyframes toastIn  { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:none; } }
-  @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateX(40px); } }
+  @keyframes toastIn  { from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:none;} }
+  @keyframes toastOut { from{opacity:1;transform:none;}to{opacity:0;transform:translateX(40px);} }
 
   /* Loading */
   .loading-overlay {
@@ -299,12 +297,12 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
   }
   .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(232,41,76,0.15); border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin { to{transform:rotate(360deg);} }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: 0.06em; }
 
   .hidden { display: none !important; }
-  @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);} }
 </style>
 </head>
 <body>
@@ -389,25 +387,29 @@
     </div>
   </div>
 
-  <!-- ════ COMPLETION ════ -->
+  <!-- ════ COMPLETION — thank you only, no score ════ -->
   <div id="resultsDashboard" class="card hidden">
     <div class="complete-wrap">
       <img src="image.png" alt="GDG ATU" class="complete-logo">
-      <div class="complete-eyebrow">Exam Complete</div>
-      <div class="complete-name" id="completeName">Well done!</div>
-      <div class="score-ring">
-        <span class="sr-num" id="finalScoreSpan">0</span>
-        <span class="sr-label">points</span>
+
+      <div class="complete-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
       </div>
-      <div class="stats-strip">
-        <div class="stat-cell"><div class="sc-label">Time Used</div><div class="sc-val" id="finalTimeSpan">--</div></div>
-        <div class="stat-cell"><div class="sc-label">Accuracy</div><div class="sc-val"><span id="accuracySpan">0</span>%</div></div>
-        <div class="stat-cell"><div class="sc-label">Hints Used</div><div class="sc-val" id="hintsUsedSpan">0</div></div>
+
+      <div class="complete-eyebrow">Exam Submitted</div>
+      <div class="complete-heading" id="completeName">Thank You!</div>
+
+      <div class="complete-divider"></div>
+
+      <div class="complete-sub">
+        Your answers have been recorded successfully.<br>
+        <strong>Results will be announced by the organizers.</strong>
       </div>
-      <div id="bonusBadge" class="bonus-badge hidden">Bonus Round Completed</div>
-      <div class="complete-note">
-        Your score has been saved successfully.<br>
-        <strong>Rankings will be announced by the organizers.</strong> Good luck!
+
+      <div class="complete-footer">
+        Good luck to all participants — GDG ATU
       </div>
     </div>
   </div>
@@ -448,35 +450,27 @@ async function saveScore(entry) {
 function checkUserAttempt(name) { return globalScores.some(s => s.name.toLowerCase() === name.toLowerCase()); }
 
 // ════════════════════════════════════════
-//  HELPER: build highlighted code HTML
+//  CODE HIGHLIGHTING
 // ════════════════════════════════════════
 function codeHtml(lines) {
-  // lines is an array of strings; ___  becomes the animated blank
   return lines.map(line =>
     line
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/___/g, '<span class="c-blank">___</span>')
-      // keywords
       .replace(/\b(import|from|as|for|in|range|if|else|return|def|class|True|False|None|and|or|not|print)\b/g, '<span class="c-kw">$1</span>')
-      // strings (simple single/double)
       .replace(/'([^']+)'/g, "<span class=\"c-str\">'$1'</span>")
       .replace(/"([^"]+)"/g, '<span class="c-str">"$1"</span>')
-      // comments
       .replace(/(#.*)$/, '<span class="c-cmt">$1</span>')
-      // numbers
       .replace(/\b(\d+\.?\d*)\b/g, '<span class="c-num">$1</span>')
   ).join('\n');
 }
 
 // ════════════════════════════════════════
-//  QUIZ DATA  — 25 core questions
-//  type: "theory" | "code"
-//  codeLines: array of strings (use ___ for blank)
+//  QUIZ DATA
 // ════════════════════════════════════════
 const coreQuestions = [
 
-  // ── THEORY (15 questions) ──────────────────────────────────────────────
-
+  // ── THEORY ──
   { type:"theory", difficulty:"easy", points:10,
     text:"What is the main difference between Traditional Programming and Machine Learning?",
     options:["ML uses hardcoded rules","ML learns patterns from data","No difference","ML requires more hardware"],
@@ -503,7 +497,7 @@ const coreQuestions = [
 
   { type:"theory", difficulty:"easy", points:10,
     text:"Which Pandas method is used to detect missing values in a DataFrame?",
-    options:[".dropna()","isnull()","fillna()","describe()"],
+    options:[".dropna()",".isnull()",".fillna()",".describe()"],
     correct:1,
     hint:"From Lab 1: combine it with .sum() to count the missing values per column." },
 
@@ -526,7 +520,7 @@ const coreQuestions = [
     hint:"The algorithm recalculates it every iteration as the geometric center of the cluster." },
 
   { type:"theory", difficulty:"medium", points:15,
-    text:"The Elbow Method is used to find the optimal value of K in K-Means. What does the 'elbow' represent?",
+    text:"The Elbow Method is used to find the optimal value of K in K-Means. What does the elbow represent?",
     options:["The point where WCSS stops decreasing rapidly","The maximum accuracy point","The highest silhouette score","The centroid location"],
     correct:0,
     hint:"Plot WCSS vs K and look for where adding more clusters gives diminishing returns." },
@@ -541,7 +535,7 @@ const coreQuestions = [
     text:"One-Hot Encoding creates binary columns for each category. When should you use it instead of Label Encoding?",
     options:["For ordinal (ordered) categories","For nominal (unordered) categories like colors or city names","When the dataset is very large","When all values are numeric"],
     correct:1,
-    hint:"Example from the slides: Red → [1,0,0], Blue → [0,1,0], Green → [0,0,1]" },
+    hint:"Example from the slides: Red = [1,0,0], Blue = [0,1,0], Green = [0,0,1]" },
 
   { type:"theory", difficulty:"medium", points:15,
     text:"What does a high Recall score indicate about a classification model?",
@@ -553,13 +547,13 @@ const coreQuestions = [
     text:"The Silhouette Score evaluates clustering quality. What does a score close to +1 mean?",
     options:["Points are misclassified","Points are on the cluster boundary","Points are well clustered and far from other clusters","The model has too many clusters"],
     correct:2,
-    hint:"From the clustering slides: range is -1 to +1. +1 = well clustered." },
+    hint:"From the clustering slides: range is -1 to +1. +1 means well clustered." },
 
   { type:"theory", difficulty:"medium", points:15,
     text:"In the ML Pipeline, which step comes right after Data Collection?",
     options:["Model Building","Model Evaluation","Data Preprocessing","Feature Engineering"],
     correct:2,
-    hint:"From the 'most important step' slide — data preprocessing is highlighted as the critical step." },
+    hint:"From the slides — data preprocessing is highlighted as the most important step." },
 
   { type:"theory", difficulty:"easy", points:10,
     text:"Which of the following is an example of Reinforcement Learning?",
@@ -567,138 +561,78 @@ const coreQuestions = [
     correct:1,
     hint:"RL agents learn by receiving rewards or penalties from an environment." },
 
-  // ── CODING (10 questions) ─────────────────────────────────────────────
-
+  // ── CODING ──
   { type:"code", difficulty:"easy", points:10,
     text:"To load a CSV file into a Pandas DataFrame, which method do you use?",
-    codeLines:[
-      "import pandas as pd",
-      "",
-      "df = pd.___(  'students.csv'  )"
-    ],
+    codeLines:["import pandas as pd","","df = pd.___( 'students.csv' )"],
     options:["read_csv()","load_csv()","open_csv()","import_csv()"],
     correct:0,
     hint:"This is the most common Pandas method. The file name goes inside the parentheses." },
 
   { type:"code", difficulty:"easy", points:10,
     text:"To see the first 5 rows of a DataFrame after loading it, which method do you call?",
-    codeLines:[
-      "df = pd.read_csv( 'students.csv' )",
-      "",
-      "df.___()    # shows first 5 rows"
-    ],
+    codeLines:["df = pd.read_csv( 'students.csv' )","","df.___()    # shows first 5 rows"],
     options:["head()","top()","first()","show()"],
     correct:0,
     hint:"Lab 1 uses this right after loading the dataset to understand its structure." },
 
   { type:"code", difficulty:"easy", points:10,
-    text:"To count missing values in each column of a DataFrame, which combination of methods is used?",
-    codeLines:[
-      "# Count missing values per column",
-      "",
-      "df.___().sum()"
-    ],
+    text:"To count missing values in each column of a DataFrame, which combination is used?",
+    codeLines:["# Count missing values per column","","df.___().sum()"],
     options:["isnull()","missing()","isna_count()","findnull()"],
     correct:0,
     hint:"From Lab 1: isnull() returns True where values are missing, then .sum() counts them." },
 
   { type:"code", difficulty:"easy", points:10,
-    text:"To fill missing values in the 'Hours_Studied' column with the column mean, which code is correct?",
-    codeLines:[
-      "# Fill missing values with mean",
-      "",
-      "df['Hours_Studied'].fillna(  df['Hours_Studied'].___()  )"
-    ],
+    text:"To fill missing values in the 'Hours_Studied' column with the column mean, complete the code:",
+    codeLines:["# Fill missing values with mean","","df['Hours_Studied'].fillna( df['Hours_Studied'].___() )"],
     options:["mean()","average()","median()","sum()"],
     correct:0,
-    hint:"Lab 1 Task: fill the null values in 'Hours_Studied' with their mean." },
+    hint:"Lab 1 Task: fill the null values in Hours_Studied with their mean." },
 
   { type:"code", difficulty:"easy", points:10,
     text:"To remove duplicate rows from a DataFrame, which method do you use?",
-    codeLines:[
-      "# Remove duplicate rows",
-      "",
-      "df = df.___()"],
+    codeLines:["# Remove duplicate rows","","df = df.___()"],
     options:["drop_duplicates()","remove_dupes()","del_duplicates()","unique_rows()"],
     correct:0,
     hint:"Lab 1: We usually remove duplicates especially when combining different data sources." },
 
   { type:"code", difficulty:"medium", points:15,
-    text:"StandardScaler centers data to mean=0 and variance=1. In the K-Means lab, which method applies the scaler to the data?",
-    codeLines:[
-      "from sklearn.preprocessing import StandardScaler",
-      "",
-      "scaler = StandardScaler()",
-      "X_scaled = scaler.___(X)"
-    ],
+    text:"StandardScaler centers data to mean=0 and variance=1. Which method fits the scaler AND transforms the data in one step?",
+    codeLines:["from sklearn.preprocessing import StandardScaler","","scaler = StandardScaler()","X_scaled = scaler.___(X)"],
     options:["fit_transform()","apply()","scale()","normalize()"],
     correct:0,
     hint:"From the K-Means notebook: this single method both fits the scaler AND transforms the data." },
 
   { type:"code", difficulty:"medium", points:15,
-    text:"After scaling the data, how do you create and fit a K-Means model with 5 clusters?",
-    codeLines:[
-      "from sklearn.cluster import KMeans",
-      "",
-      "kmeans = KMeans(n_clusters=5, random_state=42)",
-      "y_kmeans = kmeans.___(X_scaled)"
-    ],
+    text:"After scaling the data, how do you fit a K-Means model AND get the cluster labels in one step?",
+    codeLines:["from sklearn.cluster import KMeans","","kmeans = KMeans(n_clusters=5, random_state=42)","y_kmeans = kmeans.___(X_scaled)"],
     options:["fit_predict()","train()","fit_only()","predict_only()"],
     correct:0,
     hint:"From the K-Means notebook: this method both fits the model AND returns cluster labels." },
 
   { type:"code", difficulty:"medium", points:15,
-    text:"To calculate the Silhouette Score of a K-Means clustering result, which function is used?",
-    codeLines:[
-      "from sklearn.metrics import ___",
-      "",
-      "score = silhouette_score(X_scaled, y_kmeans)",
-      "print(f'Score: {score:.4f}')"
-    ],
+    text:"To calculate the Silhouette Score, which function do you import from sklearn.metrics?",
+    codeLines:["from sklearn.metrics import ___","","score = silhouette_score(X_scaled, y_kmeans)","print(f'Score: {score:.4f}')"],
     options:["silhouette_score","accuracy_score","cluster_score","kmeans_score"],
     correct:0,
     hint:"From the K-Means notebook: it measures how well data points fit within their clusters." },
 
   { type:"code", difficulty:"medium", points:15,
-    text:"In Lab 2, to split the dataset into 80% training and 20% testing, which parameter is set?",
-    codeLines:[
-      "from sklearn.model_selection import train_test_split",
-      "",
-      "X_train, X_test, y_train, y_test = train_test_split(",
-      "    X, y, ___=0.2, random_state=42",
-      ")"
-    ],
+    text:"In Lab 2, to split the dataset into 80% training and 20% testing, which parameter name is used?",
+    codeLines:["from sklearn.model_selection import train_test_split","","X_train, X_test, y_train, y_test = train_test_split(","    X, y, ___=0.2, random_state=42",")"],
     options:["test_size","split_ratio","val_size","train_size"],
     correct:0,
     hint:"Lab 2 instructions: Set test_size = 0.2 and random_state = 42." },
 
   { type:"code", difficulty:"medium", points:15,
-    text:"The IQR method detects outliers. How is the IQR calculated from Q1 and Q3?",
-    codeLines:[
-      "Q1 = df['Hours_Studied'].quantile(0.25)",
-      "Q3 = df['Hours_Studied'].quantile(0.75)",
-      "",
-      "IQR = ___ - ___"
-    ],
+    text:"The IQR method detects outliers. How is the IQR value calculated?",
+    codeLines:["Q1 = df['Hours_Studied'].quantile(0.25)","Q3 = df['Hours_Studied'].quantile(0.75)","","IQR = ___ - ___"],
     options:["Q3 - Q1","Q1 - Q3","Q3 + Q1","Q3 * Q1"],
     correct:0,
     hint:"From Lab 1: IQR = Q3 minus Q1. The interquartile range is the middle 50% of the data." },
-
-  { type:"code", difficulty:"medium", points:15,
-    text:"To apply One-Hot Encoding to all remaining text columns in a DataFrame, which function is used?",
-    codeLines:[
-      "# Encode all categorical (object) columns",
-      "",
-      "df = pd.___(df,",
-      "    columns=df.select_dtypes(include='object').columns,",
-      "    drop_first=True)"
-    ],
-    options:["get_dummies()","one_hot()","encode_columns()","label_encode()"],
-    correct:0,
-    hint:"Lab 1 Part 3: this Pandas function converts text columns into binary 0/1 columns." },
 ];
 
-// Bonus questions (unlocked if under 20 min)
 const bonusQuestions = [
   { type:"theory", difficulty:"hard", points:25,
     text:"Which clustering validation metric ranges from -1 to +1 and measures how well each point fits its cluster?",
@@ -713,29 +647,21 @@ const bonusQuestions = [
     hint:"Too many clusters splits real groups and creates meaningless micro-clusters." },
 
   { type:"code", difficulty:"hard", points:25,
-    text:"In Lab 2, to scale ONLY the training data correctly (fit on train, transform both), which approach is correct?",
-    codeLines:[
-      "scaler = StandardScaler()",
-      "X_train_scaled = scaler.fit_transform(X_train)",
-      "X_test_scaled  = scaler.___(X_test)    # NO fit here!"
-    ],
+    text:"In Lab 2, to scale test data correctly without data leakage, which method do you use on the test set?",
+    codeLines:["scaler = StandardScaler()","X_train_scaled = scaler.fit_transform(X_train)","X_test_scaled  = scaler.___(X_test)    # NO fit here!"],
     options:["transform()","fit_transform()","fit()","scale()"],
     correct:0,
     hint:"You NEVER fit the scaler on test data — that would cause data leakage. Only .transform() on test." },
 
   { type:"theory", difficulty:"hard", points:25,
-    text:"The classification slide defines precision as TP/(TP+FP). What does FP stand for and when does high precision matter?",
-    options:["False Positive — matters when false alarms are costly (e.g. spam filter)","False Positive — matters when missing cases is costly (e.g. cancer screening)","False Prediction — always matters equally","False Precision — only for regression"],
+    text:"Precision is defined as TP/(TP+FP). What does FP (False Positive) mean and when does high precision matter?",
+    options:["A negative case wrongly predicted as positive — matters when false alarms are costly","A positive case wrongly predicted as negative — matters when missing cases is costly","An incorrect regression prediction — always matters equally","A precision error — only for regression tasks"],
     correct:0,
-    hint:"High precision = when you predict positive, you are usually right. Bad false alarms matter here." },
+    hint:"High precision means: when you predict positive, you are usually right. Spam filters need high precision." },
 
   { type:"code", difficulty:"hard", points:20,
-    text:"To calculate the R-squared score after making predictions in Lab 2, which function and arguments are correct?",
-    codeLines:[
-      "from sklearn.metrics import r2_score",
-      "",
-      "r2 = r2_score( ___, y_pred )"
-    ],
+    text:"To calculate the R-squared score in Lab 2, which argument comes first in r2_score()?",
+    codeLines:["from sklearn.metrics import r2_score","","r2 = r2_score( ___, y_pred )"],
     options:["y_test","y_train","X_test","y_pred"],
     correct:0,
     hint:"R2 compares actual test labels vs predicted labels. y_test comes first, then y_pred." },
@@ -744,8 +670,7 @@ const bonusQuestions = [
 // ════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════
-const TIMER_SECONDS = 2700; // 45 minutes
-const BONUS_THRESHOLD = 1200; // under 20 min remaining = over 25 min used... actually check remaining >= 1500 (25min left)
+const TIMER_SECONDS = 2700;
 let currentQuestions=[], userAnswers=[], hintsUsed=[];
 let currentIndex=0, quizActive=false, timerInterval=null;
 let totalPoints=0, bonusUnlocked=false, quizFinished=false;
@@ -806,20 +731,16 @@ function renderQuestion() {
   document.getElementById('qTotal').textContent = `/${len}`;
   document.getElementById('quizProgress').style.width = `${((currentIndex+1)/len)*100}%`;
 
-  // Difficulty badge
   const db = document.getElementById('diffBadge');
   db.textContent = q.difficulty.charAt(0).toUpperCase()+q.difficulty.slice(1);
   db.className = `diff-badge diff-${q.difficulty}`;
 
-  // Type chip
   const isCode = q.type === 'code';
   typeChipEl.textContent = isCode ? 'Code' : 'Theory';
   typeChipEl.className   = isCode ? 'type-chip code' : 'type-chip';
 
-  // Question text
   document.getElementById('questionText').textContent = q.text;
 
-  // Code block
   if (isCode && q.codeLines) {
     codeContentEl.innerHTML = codeHtml(q.codeLines);
     codeBlockEl.classList.remove('hidden');
@@ -827,24 +748,24 @@ function renderQuestion() {
     codeBlockEl.classList.add('hidden');
   }
 
-  // Hint
   hintBox.classList.add('hidden'); hintBox.innerHTML = '';
   const answered = userAnswers[currentIndex], hintDone = hintsUsed[currentIndex];
   hintBtn.disabled = !!(answered || hintDone);
   if (hintDone) { hintBox.innerHTML = `<strong>Hint:</strong> ${q.hint}`; hintBox.classList.remove('hidden'); }
 
-  // Options
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   q.options.forEach((opt,idx) => {
     const btn = document.createElement('button');
     btn.className = isCode ? 'opt-btn code-opt' : 'opt-btn';
     btn.innerHTML = `<span class="opt-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
+
     if (answered) {
       btn.classList.add('answered');
-      if (idx === q.correct) btn.classList.add('correct');
-      else if (idx === answered.selected) btn.classList.add('wrong');
+      // Only show which one the user picked — neutral grey, no right/wrong color
+      if (idx === answered.selected) btn.classList.add('selected');
     }
+
     btn.onclick = () => {
       if (!quizActive || answered) return;
       const isCorrect = idx === q.correct;
@@ -858,16 +779,20 @@ function renderQuestion() {
         if (mult > 1) showToast(`${mult}x Speed Bonus! +${earned} pts`);
       }
       userAnswers[currentIndex] = { selected:idx, isCorrect };
-      btn.classList.add(isCorrect ? 'correct' : 'wrong');
-      if (!isCorrect) container.children[q.correct].classList.add('correct');
+
+      // Mark selected button as neutral grey — no correct/wrong feedback
+      btn.classList.add('selected', 'answered');
+      container.querySelectorAll('.opt-btn').forEach(b => b.classList.add('answered'));
+
       hintBtn.disabled = true;
-      // Bonus: if answered Q24 (index 24) with >=1500s remaining
+
       if (!bonusUnlocked && currentIndex === coreQuestions.length-1 && remainingSeconds >= 1500)
         setTimeout(() => triggerBonus(), 300);
+
       setTimeout(() => {
         if (currentIndex+1 < currentQuestions.length) { currentIndex++; renderQuestion(); }
         else endQuiz();
-      }, 900);
+      }, 600);
     };
     container.appendChild(btn);
   });
@@ -894,15 +819,15 @@ async function endQuiz() {
   const correct  = userAnswers.filter(a => a && a.isCorrect).length;
   const timeUsed = TIMER_SECONDS - remainingSeconds;
   const timeStr  = `${Math.floor(timeUsed/60)}m ${timeUsed%60}s`;
-  document.getElementById('completeName').textContent   = `Well done, ${currentPlayer}!`;
-  document.getElementById('finalScoreSpan').textContent = totalPoints;
-  document.getElementById('finalTimeSpan').textContent  = timeStr;
-  document.getElementById('accuracySpan').textContent   = ((correct/totalLen)*100).toFixed(1);
-  document.getElementById('hintsUsedSpan').textContent  = hintsCount;
-  if (bonusUnlocked) document.getElementById('bonusBadge').classList.remove('hidden');
+
+  // Personalise the thank-you heading with name
+  document.getElementById('completeName').textContent = `Thank You, ${currentPlayer}!`;
+
   quizContainer.classList.add('hidden');
   resultsDashboard.classList.remove('hidden');
-  loadingOverlay.querySelector('.loading-text').textContent = 'Saving your score...';
+
+  // Save score silently in background
+  loadingOverlay.querySelector('.loading-text').textContent = 'Saving your answers...';
   loadingOverlay.classList.remove('hidden');
   try {
     await saveScore({ name:currentPlayer, score:totalPoints, time:timeStr,
@@ -921,7 +846,6 @@ async function startQuiz() {
   userAnswers=new Array(coreQuestions.length).fill(null); hintsUsed=new Array(coreQuestions.length).fill(false);
   hintsCount=0; currentIndex=0; totalPoints=0; bonusUnlocked=false; quizFinished=false;
   document.getElementById('liveScore').textContent='0';
-  document.getElementById('bonusBadge').classList.add('hidden');
   document.getElementById('timerDisplay').textContent='45:00';
   document.getElementById('timerChip').classList.remove('warning');
   document.getElementById('qTotal').textContent=`/${coreQuestions.length}`;
