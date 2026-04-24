@@ -217,14 +217,14 @@ body {
 .hint-stat .hs-val { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--amber); }
 
 /* ── Most-missed questions ── */
-.missed-list { display: flex; flex-direction: column; gap: 8px; }
+/* .missed-list { display: flex; flex-direction: column; gap: 8px; }
 .missed-item {
   background: var(--dark-card2); border: 1px solid var(--dark-border); border-radius: 12px;
   padding: 12px 16px; display: flex; align-items: center; gap: 14px;
 }
 .missed-num { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 28px; }
 .missed-text { font-size: 13px; color: var(--text); flex: 1; line-height: 1.4; }
-.missed-pct { font-family: var(--mono); font-size: 13px; color: var(--red); font-weight: 700; white-space: nowrap; }
+.missed-pct { font-family: var(--mono); font-size: 13px; color: var(--red); font-weight: 700; white-space: nowrap; } */
 
 /* ── Toast ── */
 .toast {
@@ -368,7 +368,7 @@ body {
     <!-- Bottom row -->
     <div class="grid-2">
 
-      <!-- Most missed questions -->
+      <!-- Most missed questions
       <div class="panel">
         <div class="panel-head"><span class="panel-title"> Most Missed Questions</span></div>
         <div class="panel-body">
@@ -376,7 +376,7 @@ body {
             <div style="color:var(--muted);font-size:13px;">Loading...</div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div style="display:flex;flex-direction:column;gap:20px;">
 
@@ -582,11 +582,11 @@ function render() {
       <div style="font-family:var(--mono);font-size:14px;color:var(--red);font-weight:700;">${s.score}</div>
     </div>`).join('');
 
-  // ─ Most missed (needs per-answer data — show placeholder based on score buckets)
-  const lowScorers = scores.filter(s => s.score < avg);
-  document.getElementById('missedList').innerHTML = lowScorers.length
-    ? '<div style="color:var(--muted);font-size:13px;padding:4px 0;">Per-question miss data requires answer tracking.<br>Enable in quiz JS to see granular stats here.</div>'
-    : '<div style="color:var(--green);font-size:13px;">Great performance! Most players scored above average.</div>';
+  // // ─ Most missed (needs per-answer data — show placeholder based on score buckets)
+  // const lowScorers = scores.filter(s => s.score < avg);
+  // document.getElementById('missedList').innerHTML = lowScorers.length
+  //   ? '<div style="color:var(--muted);font-size:13px;padding:4px 0;">Per-question miss data requires answer tracking.<br>Enable in quiz JS to see granular stats here.</div>'
+  //   : '<div style="color:var(--green);font-size:13px;">Great performance! Most players scored above average.</div>';
 }
 
 function drawDistChart(scoreArr) {
